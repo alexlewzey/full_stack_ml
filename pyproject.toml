@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "example-cdk"
+version = "0.1.0"
+description = ""
+authors = ["Alexander Lewzey <a.lewzey@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.1"
+ipykernel = "^6.29.4"
+pytest = "^8.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+
+[tool.mypy]
+ignore_missing_imports = true
+check_untyped_defs = true
+
+
+[tool.ruff]
+select = [
+    "A",  # Pyflakes: general checks
+    "B",  # pycodestyle: pycodestyle checks
+    "C",  # mccabe: complexity checks
+    # "D",  # pydocstyle: docstring style checks
+    "E",  # pycodestyle: pycodestyle errors
+    "F",  # pyflakes: unused imports, variables, etc.
+    "I",  # isort: import sorting
+    "N",  # pep8-naming: naming conventions
+    "S",  # bandit: security checks
+    "W",  # pycodestyle: pycodestyle warnings
+]
+ignore = [
+    "S101",  # Ignore use of assert detected
+    "S108", # ignore use of tmp
+]
+fix = true
