@@ -9,3 +9,9 @@ RUN pip install poetry && \
     poetry install --no-root && \
     git init . && \
     pre-commit install --install-hooks
+
+# Install nvm, node, npm and cdk
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
+    source ~/.bashrc && \
+    nvm install 22.3.0 && \
+    npm install -g aws-cdk
