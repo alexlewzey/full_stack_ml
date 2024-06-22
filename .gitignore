@@ -4,6 +4,19 @@ tmp
 *.png
 .DS_Store
 .ruff_cache
+*.zip
+
+*.swp
+package-lock.json
+__pycache__
+.pytest_cache
+.venv
+*.egg-info
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
 
 
 # Byte-compiled / optimized / DLL files

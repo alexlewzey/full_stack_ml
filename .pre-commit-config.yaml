@@ -9,6 +9,9 @@ repos:
   - id: check-yaml
   - id: pretty-format-json
     exclude: .+ipynb$
+    args:
+    - --autofix
+    - --no-sort-keys
   - id: trailing-whitespace
   - id: check-merge-conflict
   - id: end-of-file-fixer
@@ -70,7 +73,7 @@ repos:
   hooks:
   - id: test
     name: test
-    entry: python -m pytest
+    entry: python -m pytest tests/
     language: system
     pass_filenames: false
   - id: poetry-lock

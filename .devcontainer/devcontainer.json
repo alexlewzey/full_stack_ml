@@ -4,6 +4,9 @@
 	"name": "Python 3",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"build": {"dockerfile": "Dockerfile", "context": ".."},
+	"runArgs": [
+        "--env-file", "${localWorkspaceFolder}/.env"
+    ], 
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -22,12 +25,17 @@
 				"vscode-icons-team.vscode-icons", // vscode-icons
 				"charliermarsh.ruff", // Ruff
 				"ms-toolsai.jupyter" // Jupyter
-			]
+			],
+			"settings": {
+				"python.pythonPath": "/usr/local/bin/python",
+				"editor.rulers": [88, 120]
+			}
 		}
 	},
 
 	"mounts": [
-		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
