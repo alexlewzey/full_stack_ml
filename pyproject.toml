@@ -11,10 +11,9 @@ pandas = "^2.2.2"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.7.1"
-ipykernel = "^6.29.4"
 pytest = "^8.2.2"
-pathspec = "^0.12.1"
-
+aws-cdk-lib = "^2.147.0"
+constructs = "^10.3.0"
 
 [tool.poetry.group.lambda.dependencies]
 requests = "^2.32.3"
@@ -22,6 +21,10 @@ requests = "^2.32.3"
 [tool.poetry.group.app.dependencies]
 aws-cdk-lib = "^2.147.0"
 constructs = "^10.3.0"
+
+[tool.poetry.group.other.dependencies]
+ipykernel = "^6.29.4"
+pathspec = "^0.12.1"
 
 [build-system]
 requires = ["poetry-core"]
