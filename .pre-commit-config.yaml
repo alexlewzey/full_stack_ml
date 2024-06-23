@@ -1,14 +1,13 @@
-exclude: ^(\.devcontainer|.*\.terraform.*|.*\.tfstate.*)
 repos:
 # general
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.5.0
   hooks:
   - id: check-json
-    exclude: \.ipynb$
+    exclude: (\.ipynb|devcontainer.json)$
   - id: check-yaml
   - id: pretty-format-json
-    exclude: .+ipynb$
+    exclude: (\.ipynb|devcontainer.json)$
     args:
     - --autofix
     - --no-sort-keys
@@ -16,6 +15,8 @@ repos:
   - id: check-merge-conflict
   - id: end-of-file-fixer
   - id: check-docstring-first
+  - id: detect-aws-credentials
+  - id: detect-private-key
   - id: check-added-large-files
     args: [--maxkb=20480]
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
@@ -58,6 +59,11 @@ repos:
   - id: mypy
     args: [--check-untyped-defs, --non-interactive, --install-types, --no-namespace-packages]
     additional_dependencies: [types-setuptools]
+# docker
+- repo: https://github.com/hadolint/hadolint
+  rev: v2.12.0
+  hooks:
+  - id: hadolint
 # jupyter notebooks
 - repo: https://github.com/kynan/nbstripout
   rev: 0.6.1
@@ -68,7 +74,7 @@ repos:
   hooks:
   - id: nbqa-pyupgrade
     args: [--py311-plus]
-
+# system commands
 - repo: local
   hooks:
   - id: test
@@ -79,6 +85,11 @@ repos:
   - id: poetry-lock
     name: poetry-lock
     entry: poetry lock --no-update
+    language: system
+    pass_filenames: false
+  - id: cdk-synth
+    name: cdk-synth
+    entry: cdk synth
     language: system
     pass_filenames: false
   - id: dockerignore

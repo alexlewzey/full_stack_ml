@@ -3,7 +3,7 @@ test:
 
 deploy:
 	cdk bootstrap
-	cdk deploy
+	cdk deploy --require-approval never
 
 p2t:
 	@python utils/project_to_text.py
@@ -15,7 +15,7 @@ dockerignore:
 
 build-local:
 	@echo "Building Docker image and running container"
-	@docker image build --platform linux/amd64 -t lambda -f lambda/Dockerfile .
+	@docker image build --platform linux/arm64 -t lambda -f lambda/Dockerfile .
 	@docker container run -p 9000:8080 lambda
 
 invoke-local:
