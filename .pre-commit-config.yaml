@@ -77,6 +77,11 @@ repos:
 # system commands
 - repo: local
   hooks:
+  - id: taplo
+    name: taplo (format toml)
+    entry: taplo format --option indent_string="    "
+    language: system
+    pass_filenames: false
   - id: test
     name: test
     entry: python -m pytest tests/

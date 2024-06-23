@@ -1,8 +1,14 @@
-def main():
-    print("Running hello world app!")
+import random
+
+names = ["mole", "moje", "roley", "mojamon"]
 
 
-def handler(event, context):
+def main() -> None:
+    name = random.choice(names)
+    print(f"Hello {name}!")
+
+
+def handler(event, context) -> dict:
     try:
         main()
         return {"statusCode": 200, "body": "Email sent successfully!"}

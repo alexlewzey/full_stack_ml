@@ -6,6 +6,8 @@ import aws_cdk.aws_scheduler as scheduler
 from aws_cdk import App, Stack
 from constructs import Construct
 
+SCHEDULE_EXPRESSION: str = "rate(1 hour)"
+
 
 class HelloWorldStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs):
@@ -47,7 +49,7 @@ class HelloWorldStack(Stack):
             flexible_time_window=scheduler.CfnSchedule.FlexibleTimeWindowProperty(
                 mode="OFF"
             ),
-            schedule_expression="rate(1 minute)",
+            schedule_expression=SCHEDULE_EXPRESSION,
             target=scheduler.CfnSchedule.TargetProperty(
                 arn=lambda_function.function_arn,
                 role_arn=scheduler_role.role_arn,

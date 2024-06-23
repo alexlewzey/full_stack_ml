@@ -1,16 +1,16 @@
-# hadolint global ignore=DL4001,SC1091,DL3008
+# hadolint global ignore=DL4001,SC1091,DL3008,DL3016,DL3047
 FROM python:3.12-bullseye
 
 WORKDIR /workspaces/setup
 
-# Install nvm, node, npm and cdk
+# Install nvm, node, npm, cdk and taplo (toml formatter)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | /bin/bash && \
     export NVM_DIR="$HOME/.nvm" && \
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" && \
     nvm install 22.3.0 && \
-    npm install -g aws-cdk@2.147.0
+    npm install -g aws-cdk@2.147.0 @taplo/cli
 
 # Install python dependencies
 COPY .pre-commit-config.yaml pyproject.toml poetry.lock ./
@@ -26,7 +26,6 @@ RUN git init . && \
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     ./aws/install
-
 
 # Update and install dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -45,6 +44,6 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     rm -rf /var/lib/apt/lists/*
 
 # Install hadolint (docker linter)
-RUN wget -O --progress=dot:giga /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \
+RUN wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \
     mv /tmp/hadolint /usr/local/bin/hadolint && \
     chmod +x /usr/local/bin/hadolint
