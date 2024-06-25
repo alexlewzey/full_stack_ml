@@ -27,15 +27,6 @@ jobs:
     - name: Generate Release Notes
       id: generate_notes
       uses: release-drafter/release-drafter@v5.15.0
-      with:
-        template: |
-          ## What’s Changed
-
-          $CHANGES
-
-          ## Contributors
-          Thanks to the following people who contributed to this release:
-          $CONTRIBUTORS
 
     - name: Get current version
       id: get_version
