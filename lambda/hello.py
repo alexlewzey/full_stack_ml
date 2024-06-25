@@ -1,3 +1,4 @@
+"""The hello script"""
 import random
 
 names = ["mole", "moje", "roley", "mojamon"]
