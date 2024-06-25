@@ -33,6 +33,10 @@ jobs:
 
           $CHANGES
 
+          ## Contributors
+          Thanks to the following people who contributed to this release:
+          $CONTRIBUTORS
+
     - name: Get current version
       id: get_version
       run: echo ::set-output name=version::$(cat version.txt)
