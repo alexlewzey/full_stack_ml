@@ -39,8 +39,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ steps.generate_notes.VERSION }}
-        release_name: v${{ steps.generate_notes.VERSION }}
+        tag_name: v${{ steps.get_version.version }}
+        release_name: v${{ steps.get_version.version }}
         body: ${{ steps.generate_notes.outputs.body }}
         draft: false
         prerelease: false
