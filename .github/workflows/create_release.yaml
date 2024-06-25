@@ -10,6 +10,8 @@ on:
 permissions:
   contents: write
 
+env:
+  VERSION: $(cat version.txt)
 
 jobs:
   create_release:
@@ -29,14 +31,10 @@ jobs:
       uses: release-drafter/release-drafter@v5.15.0
       with:
         config-name: .github/release-drafter.yml
-        template: |
-          ## What’s Changed
 
-          $CHANGES
-
-    - name: Get current version
-      id: get_version
-      run: echo ::set-output name=version::$(cat version.txt)
+    # - name: Get current version
+    #   id: get_version
+    #   run: echo "version=$(cat version.txt)" >> $GITHUB_ENV
 
     - name: Create Release
       id: create_release
@@ -44,8 +42,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ steps.get_version.outputs.version }}
-        release_name: v${{ steps.get_version.outputs.version }}
+        tag_name: v${{ env.VERSION }}
+        release_name: v${{ env.VERSION }}
         body: ${{ steps.generate_notes.outputs.body }}
         draft: false
         prerelease: false
