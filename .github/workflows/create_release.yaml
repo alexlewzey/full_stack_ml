@@ -8,11 +8,13 @@ on:
 
 
 permissions:
-  contents: write
+  contents: read
 
 
 jobs:
   create_release:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
 
     steps:
@@ -26,9 +28,11 @@ jobs:
 
     - name: Generate Release Notes
       id: generate_notes
-      uses: release-drafter/release-drafter@v5.15.0
+      uses: release-drafter/release-drafter@v6
       with:
           config-name: release_drafter.yaml
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get current version
       id: get_version
