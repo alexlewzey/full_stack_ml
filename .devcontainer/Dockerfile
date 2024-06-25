@@ -3,13 +3,10 @@ FROM python:3.12-bullseye
 
 WORKDIR /workspaces/setup
 
-# Install nvm, node, npm, cdk and taplo (toml formatter)
+# Install node, npm, cdk and taplo (toml formatter)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | /bin/bash && \
-    export NVM_DIR="$HOME/.nvm" && \
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" && \
-    nvm install 22.3.0 && \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs awscli && \
     npm install -g aws-cdk@2.147.0 @taplo/cli
 
 # Install python dependencies
@@ -21,11 +18,6 @@ RUN pip install --no-cache-dir poetry==1.8.3 && \
 # Install pre-commit hooks
 RUN git init . && \
     pre-commit install --install-hooks
-
-# Install aws cli (update aarch64 to x86_64 if not using ARM)
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip && \
-    ./aws/install
 
 # Update and install dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
