@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
 
+
 jobs:
   create_release:
     runs-on: ubuntu-latest
@@ -27,11 +28,14 @@ jobs:
       id: generate_notes
       uses: release-drafter/release-drafter@v5.15.0
       with:
-        config-name: .github/release-drafter.yml
+        template: |
+          ## What’s Changed
+
+          $CHANGES
 
     - name: Get current version
       id: get_version
-      run: echo "version=$(cat version.txt)" >> $GITHUB_ENV
+      run: echo ::set-output name=version::$(cat version.txt)
 
     - name: Create Release
       id: create_release
@@ -39,8 +43,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ steps.get_version.version }}
-        release_name: v${{ steps.get_version.version }}
+        tag_name: v${{ steps.get_version.outputs.version }}
+        release_name: v${{ steps.get_version.outputs.version }}
         body: ${{ steps.generate_notes.outputs.body }}
         draft: false
         prerelease: false
