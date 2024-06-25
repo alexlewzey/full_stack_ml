@@ -4,6 +4,8 @@ on:
   push:
     branches:
     - main
+  workflow_dispatch:
+
 
 permissions:
   contents: write
@@ -27,6 +29,10 @@ jobs:
       uses: release-drafter/release-drafter@v5.15.0
       with:
         config-name: .github/release-drafter.yml
+        template: |
+          ## What’s Changed
+
+          $CHANGES
 
     - name: Get current version
       id: get_version
