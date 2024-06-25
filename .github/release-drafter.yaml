@@ -4,5 +4,5 @@ template: |
     $CHANGES
 
     ## Contributors
-    Thanks to the following people who contributed to this release:
+    
     $CONTRIBUTORS
