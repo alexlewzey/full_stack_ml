@@ -10,9 +10,6 @@ on:
 permissions:
   contents: write
 
-env:
-  VERSION: $(cat version.txt)
-
 jobs:
   create_release:
     runs-on: ubuntu-latest
@@ -32,9 +29,9 @@ jobs:
       with:
         config-name: .github/release-drafter.yml
 
-    # - name: Get current version
-    #   id: get_version
-    #   run: echo "version=$(cat version.txt)" >> $GITHUB_ENV
+    - name: Get current version
+      id: get_version
+      run: echo "version=$(cat version.txt)" >> $GITHUB_ENV
 
     - name: Create Release
       id: create_release
@@ -42,8 +39,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ env.VERSION }}
-        release_name: v${{ env.VERSION }}
+        tag_name: v${{ steps.generate_notes.VERSION }}
+        release_name: v${{ steps.generate_notes.VERSION }}
         body: ${{ steps.generate_notes.outputs.body }}
         draft: false
         prerelease: false

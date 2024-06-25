@@ -1,5 +1,5 @@
-name-template: 'v${{ env.VERSION }}'
-tag-template: 'v${{ env.VERSION }}'
+name-template: 'v${{ steps.generate_notes.VERSION }}'
+tag-template: 'v${{ steps.generate_notes.VERSION }}'
 change-template: '- $TITLE (#$NUMBER) by @$AUTHOR'
 template: |
     ## What’s Changed
