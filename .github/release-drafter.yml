@@ -1,3 +1,5 @@
+name-template: 'v${{ env.VERSION }}'
+tag-template: 'v${{ env.VERSION }}'
 change-template: '- $TITLE (#$NUMBER) by @$AUTHOR'
 template: |
     ## What’s Changed
