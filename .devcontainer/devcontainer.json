@@ -13,21 +13,18 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"ms-vscode-remote.remote-containers", // Dev Containers
 				"ms-azuretools.vscode-docker", // Docker
 				"tamasfe.even-better-toml", // Even Better TOML
 				"oderwat.indent-rainbow", // indent-rainbow
 				"ms-vscode.makefile-tools", // Makefile Tools
 				"ms-python.python", // Python
 				"redhat.vscode-yaml", // YAML
-				"ms-vscode.remote-repositories", // Remote Repositories
-				"ms-vscode-remote.remote-wsl", // WSL
 				"vscode-icons-team.vscode-icons", // vscode-icons
 				"charliermarsh.ruff", // Ruff
 				"ms-toolsai.jupyter" // Jupyter
 			],
 			"settings": {
-				"python.pythonPath": "/usr/local/bin/python",
+				"python.pythonPath": "${localWorkspaceFolder}/.venv/bin/python",
 				"editor.rulers": [88, 120]
 			}
 		}
@@ -36,13 +33,13 @@
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-	]
+	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
+	"postCreateCommand": "poetry install && poetry run pre-commit install"
 
 	// Configure tool-specific properties.
 	// "customizations": {},

@@ -1,5 +1,5 @@
 tmp.*
-tmp
+tmp/
 *.html
 *.png
 .DS_Store
