@@ -10,14 +10,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     npm install -g aws-cdk@2.147.0 @taplo/cli
 
 # Install python dependencies
-COPY .pre-commit-config.yaml pyproject.toml poetry.lock ./
-RUN pip install --no-cache-dir poetry==1.8.3 && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-root
-
-# Install pre-commit hooks
-RUN git init . && \
-    pre-commit install --install-hooks
+RUN pip install poetry==1.8.3
 
 # Update and install dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -39,3 +32,6 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
 RUN wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \
     mv /tmp/hadolint /usr/local/bin/hadolint && \
     chmod +x /usr/local/bin/hadolint
+
+
+RUN echo "source ./.venv/bin/activate" >> ~/.bashrc

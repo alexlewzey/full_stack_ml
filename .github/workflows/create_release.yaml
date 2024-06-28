@@ -28,9 +28,9 @@ jobs:
       id: generate_notes
       uses: release-drafter/release-drafter@v6
       with:
-          config-name: release-drafter.yaml
+        config-name: release-drafter.yaml
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get current version
       id: get_version
