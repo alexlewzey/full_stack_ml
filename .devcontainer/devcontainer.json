@@ -24,9 +24,12 @@
 				"ms-toolsai.jupyter" // Jupyter
 			],
 			"settings": {
-				"python.pythonPath": "${localWorkspaceFolder}/.venv/bin/python",
-				"editor.rulers": [88, 120]
+				"editor.rulers": [88, 120],
+				"python.defaultInterpreterPath": "${localWorkspaceFolder}/.venv/bin/python"
 			}
+		},
+		"remoteEnv": {
+			"PATH": "${localWorkspaceFolder}/.venv/bin:$PATH"
 		}
 	},
 
@@ -39,7 +42,9 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "poetry install && poetry run pre-commit install"
+	// "postCreateCommand": "bash $(pwd)/.devcontainer/post_create_command.sh"
+	// "postCreateCommand": "poetry install && pre-commit install && echo 'source $(pwd)/.venv/bin/activate' >> $HOME/.bashrc"
+	"postCreateCommand": "$(pwd)/.devcontainer/post_create_command.sh"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
