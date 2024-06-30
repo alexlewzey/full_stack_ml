@@ -25,11 +25,9 @@
 			],
 			"settings": {
 				"editor.rulers": [88, 120],
-				"python.defaultInterpreterPath": "${localWorkspaceFolder}/.venv/bin/python"
+				"python.terminal.activateEnvInCurrentTerminal": true,
+				"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
 			}
-		},
-		"remoteEnv": {
-			"PATH": "${localWorkspaceFolder}/.venv/bin:$PATH"
 		}
 	},
 
@@ -42,11 +40,8 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "bash $(pwd)/.devcontainer/post_create_command.sh"
-	// "postCreateCommand": "poetry install && pre-commit install && echo 'source $(pwd)/.venv/bin/activate' >> $HOME/.bashrc"
 	"onCreateCommand": "poetry install",
-	"postCreateCommand": "$(pwd)/.devcontainer/post_create_command.sh",
-	"postStartCommand": "pre-commit install"
+	"postStartCommand": "poetry install && poetry run pre-commit install --install-hooks"
 
 	// Configure tool-specific properties.
 	// "customizations": {},

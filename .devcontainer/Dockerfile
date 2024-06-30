@@ -11,7 +11,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     npm install -g aws-cdk@2.147.0 @taplo/cli
 
 # Install python dependencies
-RUN pip install poetry==1.8.3 pre-commit
+RUN pip install poetry==1.8.3
 
 # Update and install dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -22,12 +22,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     gnupg2 && \
     rm -rf /var/lib/apt/lists/*
 
-# # Install Docker
-# RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
-#     echo "deb [arch=arm64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
-#     apt-get update && \
-#     apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io && \
-#     rm -rf /var/lib/apt/lists/*
+# Install Docker
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    echo "deb [arch=arm64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
+    apt-get update && \
+    apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install hadolint (docker linter)
 RUN wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \

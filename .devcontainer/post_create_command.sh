@@ -1,3 +1,0 @@
-#!/bin/bash
-echo "source $(pwd)/.venv/bin/activate" >>"$HOME/.bashrc"
-poetry install
