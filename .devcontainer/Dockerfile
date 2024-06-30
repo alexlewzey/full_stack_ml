@@ -7,7 +7,7 @@ WORKDIR /workspaces/setup
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get update && \
-    apt-get install -y --no-install-recommends nodejs awscli shfmt && \
+    apt-get install -y --no-install-recommends nodejs awscli && \
     npm install -g aws-cdk@2.147.0 @taplo/cli
 
 # Install python dependencies

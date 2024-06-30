@@ -44,6 +44,7 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "bash $(pwd)/.devcontainer/post_create_command.sh"
 	// "postCreateCommand": "poetry install && pre-commit install && echo 'source $(pwd)/.venv/bin/activate' >> $HOME/.bashrc"
+	"onCreateCommand": "poetry install",
 	"postCreateCommand": "$(pwd)/.devcontainer/post_create_command.sh"
 
 	// Configure tool-specific properties.
