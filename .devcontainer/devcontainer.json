@@ -45,7 +45,8 @@
 	// "postCreateCommand": "bash $(pwd)/.devcontainer/post_create_command.sh"
 	// "postCreateCommand": "poetry install && pre-commit install && echo 'source $(pwd)/.venv/bin/activate' >> $HOME/.bashrc"
 	"onCreateCommand": "poetry install",
-	"postCreateCommand": "$(pwd)/.devcontainer/post_create_command.sh"
+	"postCreateCommand": "$(pwd)/.devcontainer/post_create_command.sh",
+	"postStartCommand": "pre-commit install"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
