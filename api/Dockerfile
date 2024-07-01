@@ -6,6 +6,8 @@ RUN pip install poetry==1.8.3 --no-cache-dir && \
     poetry config virtualenvs.create false && \
     poetry install --only main,lambda --no-interaction --no-ansi --no-root
 
-COPY lambda "${LAMBDA_TASK_ROOT}/lambda"
+COPY api "${LAMBDA_TASK_ROOT}"
 
-CMD ["lambda.hello.handler"]
+# ENTRYPOINT [ "./entry_point.sh" ]
+
+CMD [ "app.handler" ]

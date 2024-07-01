@@ -32,8 +32,8 @@
 	},
 
 	"mounts": [
-		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+		// "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -41,8 +41,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"onCreateCommand": "poetry install",
-	"postStartCommand": "poetry install && poetry run pre-commit install --install-hooks"
-
+	"postStartCommand": "${containerWorkspaceFolder}/.devcontainer/post_start_command.sh"
 	// Configure tool-specific properties.
 	// "customizations": {},
 
