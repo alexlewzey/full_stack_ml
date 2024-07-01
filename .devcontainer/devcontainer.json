@@ -24,23 +24,24 @@
 				"ms-toolsai.jupyter" // Jupyter
 			],
 			"settings": {
-				"python.pythonPath": "${localWorkspaceFolder}/.venv/bin/python",
-				"editor.rulers": [88, 120]
+				"editor.rulers": [88, 120],
+				"python.terminal.activateEnvInCurrentTerminal": true,
+				"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
 			}
 		}
 	},
 
 	"mounts": [
-		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+		// "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "poetry install && poetry run pre-commit install"
-
+	"onCreateCommand": "poetry install",
+	"postStartCommand": "${containerWorkspaceFolder}/.devcontainer/post_start_command.sh"
 	// Configure tool-specific properties.
 	// "customizations": {},
 
