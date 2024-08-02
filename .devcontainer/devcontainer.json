@@ -13,15 +13,15 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"ms-python.python", // Python
+				"charliermarsh.ruff", // Ruff
+				"ms-toolsai.jupyter", // Jupyter
 				"ms-azuretools.vscode-docker", // Docker
 				"tamasfe.even-better-toml", // Even Better TOML
-				"oderwat.indent-rainbow", // indent-rainbow
 				"ms-vscode.makefile-tools", // Makefile Tools
-				"ms-python.python", // Python
 				"redhat.vscode-yaml", // YAML
-				"vscode-icons-team.vscode-icons", // vscode-icons
-				"charliermarsh.ruff", // Ruff
-				"ms-toolsai.jupyter" // Jupyter
+				"oderwat.indent-rainbow", // indent-rainbow
+				"vscode-icons-team.vscode-icons" // vscode-icons
 			],
 			"settings": {
 				"editor.rulers": [88, 120],
