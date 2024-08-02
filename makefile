@@ -1,9 +1,8 @@
 test:
 	@pre-commit run --all-files
 
-deploy:
-	cdk bootstrap
-	cdk deploy --require-approval never
+e2e:
+	@docker compose -f tests/api/docker-compose.yaml up --build --abort-on-container-exit
 
 p2t:
 	@python utils/project_to_text.py
@@ -16,9 +15,12 @@ run:
 	@python -m api.app
 
 build:
-	@echo "Building Docker image and running container"
 	@docker image build --platform linux/arm64 -t api -f api/Dockerfile .
-	@docker container run -p 9000:8080 api
+	@docker container run -p 8080:8080 api
 
 invoke:
-	@curl -X POST "http://localhost:9000/2015-03-31/functions/function/invocations" -d @event.json
+	@curl -X POST http://localhost:8080/2015-03-31/functions/function/invocations -d @event.json
+
+deploy:
+	cdk bootstrap
+	cdk deploy --require-approval never

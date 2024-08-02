@@ -36,11 +36,6 @@ repos:
   - id: shfmt
     args: [-w]
 # python
-- repo: https://github.com/asottile/pyupgrade
-  rev: v2.29.0
-  hooks:
-  - id: pyupgrade
-    args: [--py311-plus]
 - repo: https://github.com/PyCQA/docformatter
   rev: v1.7.5
   hooks:
@@ -50,9 +45,9 @@ repos:
   rev: v0.1.9
   hooks:
   - id: ruff
-    types_or: [python, pyi, jupyter]
+    types_or: [python, pyi]
   - id: ruff-format
-    types_or: [python, pyi, jupyter]
+    types_or: [python, pyi]
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: v1.8.0
   hooks:
@@ -69,17 +64,12 @@ repos:
   rev: 0.6.1
   hooks:
   - id: nbstripout
-- repo: https://github.com/nbQA-dev/nbQA
-  rev: 1.7.1
-  hooks:
-  - id: nbqa-pyupgrade
-    args: [--py311-plus]
 # system commands
 - repo: local
   hooks:
   - id: taplo
     name: taplo (format toml)
-    entry: taplo format --option indent_string="    "
+    entry: find . -maxdepth 1 -name '*.toml' -exec taplo format --option indent_string="    " {} \;
     language: system
     pass_filenames: false
   - id: test

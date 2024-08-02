@@ -1,9 +1,0 @@
-{
-  "resource": "/",
-  "path": "/items/5",
-  "httpMethod": "GET",
-  "requestContext": {},
-  "queryStringParameters": {
-    "q": "mole"
-  }
-}

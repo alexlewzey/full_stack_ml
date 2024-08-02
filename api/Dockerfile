@@ -8,6 +8,4 @@ RUN pip install poetry==1.8.3 --no-cache-dir && \
 
 COPY api "${LAMBDA_TASK_ROOT}"
 
-# ENTRYPOINT [ "./entry_point.sh" ]
-
 CMD [ "app.handler" ]

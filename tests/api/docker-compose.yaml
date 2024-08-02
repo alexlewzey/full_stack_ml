@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: api/Dockerfile
+    image: api
+    platform: linux/arm64
+    ports:
+    - 8080:8080
+
+
+  api-tests:
+    build:
+      context: ../..
+      dockerfile: tests/api/Dockerfile.test
+    image: testapp
+    platform: linux/arm64
+    command: dockerize -wait tcp://api:8080 -timeout 10s bash -c "pytest tests/api/e2e_app.py"
+    depends_on:
+    - api
