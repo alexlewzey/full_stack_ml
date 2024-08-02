@@ -12,7 +12,7 @@ dockerignore:
 	@cat .gitignore >> .dockerignore
 
 run:
-	@python -m api.app
+	@python -m api.api
 
 build:
 	@docker image build --platform linux/arm64 -t api -f api/Dockerfile .

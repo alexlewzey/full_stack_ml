@@ -1,9 +1,11 @@
 import base64
 import io
+from pathlib import Path
 
-import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from mangum import Mangum
 from PIL import Image
 from pydantic import BaseModel
@@ -14,15 +16,16 @@ class ImageData(BaseModel):
     image_data: str
 
 
+dir_api = Path(__file__).parent
+
 app = FastAPI()
+app.mount("/static", StaticFiles(directory=dir_api / "static"), name="static")
+templates = Jinja2Templates(directory=dir_api / "templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def read_root():
-    html_content = """
-
-    """  # noqa: E501
-    return html_content
+async def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/healthcheck")
@@ -41,4 +44,6 @@ def upload_image(data: ImageData):
 handler = Mangum(app)
 
 if __name__ == "__main__":
+    import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8080)  # noqa: S104

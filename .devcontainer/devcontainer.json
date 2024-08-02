@@ -45,7 +45,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"onCreateCommand": "poetry install",
-	"postStartCommand": "${containerWorkspaceFolder}/.devcontainer/post_start_command.sh"
+	"postStartCommand": "poetry install && pre-commit install --install-hooks && git config --global --add safe.directory $(pwd)"
 	// Configure tool-specific properties.
 	// "customizations": {},
 

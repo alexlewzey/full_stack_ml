@@ -15,8 +15,8 @@ services:
     build:
       context: ../..
       dockerfile: tests/api/Dockerfile.test
-    image: testapp
+    image: test-api
     platform: linux/arm64
-    command: dockerize -wait tcp://api:8080 -timeout 10s bash -c "pytest tests/api/e2e_app.py"
+    command: dockerize -wait tcp://api:8080 -timeout 10s bash -c "python -m pytest tests/api/e2e_app.py"
     depends_on:
     - api

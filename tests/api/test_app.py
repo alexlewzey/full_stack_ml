@@ -2,8 +2,8 @@ import base64
 
 from fastapi.testclient import TestClient
 
-from api.app import app
-from core import image_dir
+from api.api import app
+from utils.core import image_dir
 
 client = TestClient(app)
 
