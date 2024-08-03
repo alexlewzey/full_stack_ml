@@ -24,3 +24,7 @@ invoke:
 deploy:
 	cdk bootstrap
 	cdk deploy --require-approval never
+
+
+mlflow:
+	@mlflow ui --host 0.0.0.0 --port 8080
