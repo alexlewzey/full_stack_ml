@@ -6,6 +6,7 @@ RUN pip install poetry==1.8.3 --no-cache-dir && \
     poetry config virtualenvs.create false && \
     poetry install --only main,lambda --no-interaction --no-ansi --no-root
 
-COPY api "${LAMBDA_TASK_ROOT}"
+COPY api "${LAMBDA_TASK_ROOT}/api"
+COPY train "${LAMBDA_TASK_ROOT}/train"
 
-CMD [ "api.handler" ]
+CMD [ "api.api.handler" ]

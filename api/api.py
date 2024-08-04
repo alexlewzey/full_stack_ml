@@ -11,6 +11,9 @@ from PIL import Image
 from pydantic import BaseModel
 from torchvision import transforms
 
+from api.predictor import Predictor
+from train.preprocessing import transform
+
 
 class ImageData(BaseModel):
     image_data: str
@@ -21,6 +24,10 @@ dir_api = Path(__file__).parent
 app = FastAPI()
 app.mount("/static", StaticFiles(directory=dir_api / "static"), name="static")
 templates = Jinja2Templates(directory=dir_api / "templates")
+
+torchscript_path = dir_api / "staged_model" / "model.torchscript"
+assert torchscript_path.exists()
+predictor = Predictor(torchscript_path=torchscript_path, transform=transform)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -39,6 +46,14 @@ def upload_image(data: ImageData):
     img = Image.open(io.BytesIO(contents)).convert("RGB")
     x = transforms.ToTensor()(img)
     return {"sizes": list(x.shape)}
+
+
+@app.post("/predict")
+def predict(data: ImageData):
+    contents = base64.b64decode(data.image_data)
+    img = Image.open(io.BytesIO(contents)).convert("RGB")
+    label = predictor.predict(img)
+    return {"label": label}
 
 
 handler = Mangum(app)

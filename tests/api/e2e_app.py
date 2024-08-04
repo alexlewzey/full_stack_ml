@@ -23,7 +23,7 @@ def test_healthcheck():
     assert json.loads(response.json()["body"]) == {"hello": "world"}
 
 
-def test_uploads():
+def test_upload():
     data: dict[str, Any] = {
         "resource": "/",
         "path": "/upload",
@@ -34,6 +34,21 @@ def test_uploads():
         img_b64 = base64.b64encode(f.read()).decode("utf-8")
     data["body"] = json.dumps({"image_data": img_b64})
     response = requests.post(lambda_container_url, json=data, timeout=10)
-    print(response.json())
     assert response.status_code == 200
     assert json.loads(response.json()["body"]) == {"sizes": [3, 1388, 1484]}
+
+
+def test_predict():
+    data: dict[str, Any] = {
+        "resource": "/",
+        "path": "/predict",
+        "httpMethod": "POST",
+        "requestContext": {},
+    }
+    with image_path.open("rb") as f:
+        img_b64 = base64.b64encode(f.read()).decode("utf-8")
+    data["body"] = json.dumps({"image_data": img_b64})
+    response = requests.post(lambda_container_url, json=data, timeout=10)
+    print(response.json())
+    assert response.status_code == 200
+    assert json.loads(response.json()["body"]) == {"label": "dog"}

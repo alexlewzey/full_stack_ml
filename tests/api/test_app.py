@@ -27,5 +27,15 @@ def test_upload():
     assert body == {"sizes": [3, 1388, 1484]}
 
 
+def test_predict():
+    with path_tmp.open("rb") as f:
+        img_b64 = base64.b64encode(f.read()).decode("utf-8")
+    data = {"image_data": img_b64}
+    response = client.post("/predict", json=data)
+    assert response.status_code == 200
+    body = response.json()
+    assert body == {"label": "dog"}
+
+
 if __name__ == "__main__":
     raise Exception

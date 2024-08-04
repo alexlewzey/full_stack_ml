@@ -11,7 +11,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     npm install -g aws-cdk@2.147.0 @taplo/cli
 
 # Install python dependencies
-RUN pip install poetry==1.8.3 pre-commit
+RUN pip install poetry==1.8.3
 
 # Install dockerize
 RUN curl -LO https://github.com/jwilder/dockerize/releases/download/v0.7.0/dockerize-linux-amd64-v0.7.0.tar.gz && \

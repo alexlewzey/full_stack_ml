@@ -4,10 +4,6 @@
 	"name": "Python 3",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"build": {"dockerfile": "Dockerfile", "context": ".."},
-	"runArgs": [
-        "--env-file", "${localWorkspaceFolder}/.env"
-    ],
-
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	"customizations": {
@@ -45,7 +41,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "onCreateCommand": "poetry install",
-	"postStartCommand": "poetry install && pre-commit install --install-hooks && git config --global --add safe.directory $(pwd)"
+	"postStartCommand": "git config --global --add safe.directory $(pwd) && poetry install && poetry run pre-commit install --install-hooks"
 	// Configure tool-specific properties.
 	// "customizations": {},
 
