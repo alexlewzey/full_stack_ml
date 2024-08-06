@@ -17,7 +17,8 @@
 				"ms-vscode.makefile-tools", // Makefile Tools
 				"redhat.vscode-yaml", // YAML
 				"oderwat.indent-rainbow", // indent-rainbow
-				"vscode-icons-team.vscode-icons" // vscode-icons
+				"vscode-icons-team.vscode-icons", // vscode-icons
+				"otovo-oss.htmx-tags" // htmx-tags
 			],
 			"settings": {
 				"editor.rulers": [88, 120],

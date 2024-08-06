@@ -2,7 +2,7 @@ import base64
 import io
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -56,9 +56,19 @@ def predict(data: ImageData):
     return {"label": label}
 
 
+@app.get("/example")
+async def example(request: Request):
+    return templates.TemplateResponse("example.html", {"request": request})
+
+
+@app.post("/greet")
+async def greet(name: str = Form(...)):
+    return HTMLResponse(f"<h1>Hello, {name}</h1>")
+
+
 handler = Mangum(app)
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8080)  # noqa: S104
+    uvicorn.run(app, host="0.0.0.0", port=8080, reload=True)  # noqa: S104

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Get Content Example</title>
+        <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+    </head>
+
+    <body>
+        <form hx-post="/handel_form" hx-target="#content">
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter your name!"
+                required
+            />
+            <button type="submit">Get the content</button>
+        </form>
+        <div id="content"></div>
+        <ul>
+            <li>
+                <a href="#" hx-get="/tab1" hx-target="#tab-content">Tab 1</a>
+            </li>
+            <li>
+                <a href="#" hx-get="/tab2" hx-target="#tab-content">Tab 2</a>
+            </li>
+            <li>
+                <a href="#" hx-get="/tab3" hx-target="#tab-content">Tab 3</a>
+            </li>
+        </ul>
+        <div id="tab-content"></div>
+        <div
+            id
+            hx-get="/get-time"
+            hx-trigger="load, every 1s"
+            hx-target="#updates"
+        ></div>
+        <div id="updates"></div>
+        <div hx-get="/more-content" hx-trigger="revealed" hx-swap="beforeend">
+            <h1>unlimited power</h1>
+        </div>
+    </body>
+</html>
