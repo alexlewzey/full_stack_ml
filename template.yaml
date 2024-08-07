@@ -5,17 +5,17 @@ Description: SAM template for FastAPI application
 Globals:
   Api:
     BinaryMediaTypes:
-      - "image/jpeg"
-      - "image/png"
-      - "application/octet-stream"
-      - "application/pdf"
+    - image/jpeg
+    - image/png
+    - application/octet-stream
+    - application/pdf
 
 Resources:
   FastAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
       Architectures:
-        - arm64
+      - arm64
       PackageType: Image
       Timeout: 600
       MemorySize: 512

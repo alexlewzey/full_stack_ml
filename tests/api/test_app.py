@@ -1,5 +1,3 @@
-import base64
-
 from fastapi.testclient import TestClient
 
 from api.ui import app
@@ -20,9 +18,9 @@ def test_healthcheck():
 def test_index():
     response = client.get("/")
     assert response.status_code == 200
-    assert 'Cat vs Dog Image Classifier' in response.text
-    assert 'PyTorch + Lightning + MLflow + FastAPI + HTMX' in response.text
-    assert 'Full Stack Machine Learning Project' in response.text
+    assert "Cat vs Dog Image Classifier" in response.text
+    assert "PyTorch + Lightning + MLflow + FastAPI + HTMX" in response.text
+    assert "Full Stack Machine Learning Project" in response.text
 
 
 def test_upload():
@@ -31,12 +29,12 @@ def test_upload():
     # data = {"image_data": img_b64}
     # response = client.post("/upload", json=data)
 
-    with path_tmp.open('rb') as f:
-        files = {'file': f}
-        response = client.post('/upload', files=files)
+    with path_tmp.open("rb") as f:
+        files = {"file": f}
+        response = client.post("/upload", files=files)
 
     assert response.status_code == 200
-    assert 'dog' in response.text
+    assert "dog" in response.text
 
 
 if __name__ == "__main__":

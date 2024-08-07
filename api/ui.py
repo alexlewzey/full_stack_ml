@@ -27,20 +27,21 @@ torchscript_path = dir_api / "staged_model" / "model.torchscript"
 assert torchscript_path.exists()
 predictor = Predictor(torchscript_path=torchscript_path, transform=transform)
 
+
 @app.get("/healthcheck")
 async def healthcheck():
     return {"hello": "world"}
+
 
 @app.get("/")
 async def index(request: Request):
     return templates.TemplateResponse(request, "index.html")
 
 
-
 @app.post("/upload")
 async def upload(request: Request, file: UploadFile = File(...)):  # noqa: B008
     contents = await file.read()
-    
+
     img = Image.open(io.BytesIO(base64.b64decode(contents))).convert("RGB")
     label = predictor.predict(img)
     base64_encoded = base64.b64encode(contents).decode("utf-8")

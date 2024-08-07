@@ -32,9 +32,9 @@ def test_index():
     }
     response = requests.get(lambda_container_url, json=data, timeout=10)
     assert response.status_code == 200
-    assert 'Cat vs Dog Image Classifier' in response.text
-    assert 'PyTorch + Lightning + MLflow + FastAPI + HTMX' in response.text
-    assert 'Full Stack Machine Learning Project' in response.text
+    assert "Cat vs Dog Image Classifier" in response.text
+    assert "PyTorch + Lightning + MLflow + FastAPI + HTMX" in response.text
+    assert "Full Stack Machine Learning Project" in response.text
 
 
 def test_upload():
