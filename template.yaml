@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM template for FastAPI application
+
+Globals:
+  Api:
+    BinaryMediaTypes:
+      - "image/jpeg"
+      - "image/png"
+      - "application/octet-stream"
+      - "application/pdf"
+
+Resources:
+  FastAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures:
+        - arm64
+      PackageType: Image
+      Timeout: 600
+      MemorySize: 512
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+        AnyApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+    Metadata:
+      Dockerfile: api/Dockerfile
+      DockerContext: .
+      DockerBuildArgs:
+        platform: linux/arm64

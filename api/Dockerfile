@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.12
+FROM --platform=arm64 public.ecr.aws/lambda/python:3.12
 
 WORKDIR "${LAMBDA_TASK_ROOT}"
 COPY pyproject.toml poetry.lock ./
@@ -9,4 +9,4 @@ RUN pip install poetry==1.8.3 --no-cache-dir && \
 COPY api "${LAMBDA_TASK_ROOT}/api"
 COPY train "${LAMBDA_TASK_ROOT}/train"
 
-CMD [ "api.api.handler" ]
+CMD [ "api.ui.handler" ]

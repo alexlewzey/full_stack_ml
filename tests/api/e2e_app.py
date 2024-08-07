@@ -23,25 +23,24 @@ def test_healthcheck():
     assert json.loads(response.json()["body"]) == {"hello": "world"}
 
 
+def test_index():
+    data: dict[str, Any] = {
+        "resource": "/",
+        "path": "/",
+        "httpMethod": "GET",
+        "requestContext": {},
+    }
+    response = requests.get(lambda_container_url, json=data, timeout=10)
+    assert response.status_code == 200
+    assert 'Cat vs Dog Image Classifier' in response.text
+    assert 'PyTorch + Lightning + MLflow + FastAPI + HTMX' in response.text
+    assert 'Full Stack Machine Learning Project' in response.text
+
+
 def test_upload():
     data: dict[str, Any] = {
         "resource": "/",
         "path": "/upload",
-        "httpMethod": "POST",
-        "requestContext": {},
-    }
-    with image_path.open("rb") as f:
-        img_b64 = base64.b64encode(f.read()).decode("utf-8")
-    data["body"] = json.dumps({"image_data": img_b64})
-    response = requests.post(lambda_container_url, json=data, timeout=10)
-    assert response.status_code == 200
-    assert json.loads(response.json()["body"]) == {"sizes": [3, 1388, 1484]}
-
-
-def test_predict():
-    data: dict[str, Any] = {
-        "resource": "/",
-        "path": "/predict",
         "httpMethod": "POST",
         "requestContext": {},
     }
