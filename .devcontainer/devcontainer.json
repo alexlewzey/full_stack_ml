@@ -22,8 +22,7 @@
 			],
 			"settings": {
 				"editor.rulers": [88, 120],
-				"python.terminal.activateEnvInCurrentTerminal": true,
-				"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
+				"python.terminal.activateEnvInCurrentTerminal": true
 			}
 		}
 	},
@@ -42,7 +41,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "onCreateCommand": "poetry install",
-	"postStartCommand": "git config --global --add safe.directory $(pwd) && poetry install && poetry run pre-commit install --install-hooks"
+	"postStartCommand": "poetry install && poetry run pre-commit install --install-hooks"
 	// Configure tool-specific properties.
 	// "customizations": {},
 
