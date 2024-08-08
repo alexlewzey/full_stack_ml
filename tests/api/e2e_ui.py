@@ -1,5 +1,6 @@
 import base64
 import json
+from pathlib import Path
 from typing import Any
 
 import requests
@@ -7,7 +8,8 @@ import requests
 from utils.core import image_dir
 
 lambda_container_url: str = "http://api:8080/2015-03-31/functions/function/invocations"
-image_path = image_dir / "dog_0.png"
+path_dog_0 = image_dir / "dog_0.png"
+path_cat_0 = image_dir / "cat_0.jpg"
 
 
 def test_healthcheck():
@@ -37,17 +39,28 @@ def test_index():
     assert "Full Stack Machine Learning Project" in response.text
 
 
-def test_upload():
+def post_image_to_upload(path_img: Path) -> requests.models.Response:
     data: dict[str, Any] = {
         "resource": "/",
         "path": "/upload",
         "httpMethod": "POST",
         "requestContext": {},
     }
-    with image_path.open("rb") as f:
-        img_b64 = base64.b64encode(f.read()).decode("utf-8")
-    data["body"] = json.dumps({"image_data": img_b64})
-    response = requests.post(lambda_container_url, json=data, timeout=10)
+    with path_img.open("rb") as f:
+        image_base64 = base64.b64encode(f.read()).decode("utf-8")
+    data["body"] = json.dumps({"image_data": image_base64})
+    return requests.post(lambda_container_url, json=data, timeout=10)
+
+
+def test_upload_dog():
+    response = post_image_to_upload(path_dog_0)
     print(response.json())
     assert response.status_code == 200
-    assert json.loads(response.json()["body"]) == {"label": "dog"}
+    assert "It's a <b>dog</b>!" in response.json()["body"]
+
+
+def test_upload_cat():
+    response = post_image_to_upload(path_cat_0)
+    print(response.json())
+    assert response.status_code == 200
+    assert "It's a <b>cat</b>!" in response.json()["body"]
