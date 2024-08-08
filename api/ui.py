@@ -2,7 +2,7 @@ import base64
 import io
 from pathlib import Path
 
-from fastapi import FastAPI, File, Request, UploadFile
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from mangum import Mangum
@@ -39,10 +39,8 @@ async def index(request: Request):
 
 
 @app.post("/upload")
-async def upload(request: Request, file: UploadFile = File(...)):  # noqa: B008
-    contents = await file.read()
-
-    img = Image.open(io.BytesIO(base64.b64decode(contents))).convert("RGB")
+async def upload(request: Request, payload: ImageData):  # noqa: B008
+    img = Image.open(io.BytesIO(base64.b64decode(payload.image_data))).convert("RGB")
     label = predictor.predict(img)
     base64_encoded = base64.b64encode(contents).decode("utf-8")
     return templates.TemplateResponse(
@@ -55,13 +53,16 @@ async def upload(request: Request, file: UploadFile = File(...)):  # noqa: B008
         },
     )
 
-@app.get('/test')
-async def test(request: Request):
-    return templates.TemplateResponse(request, 'test.html')
 
-@app.post('/new')
+@app.get("/test")
+async def test(request: Request):
+    return templates.TemplateResponse(request, "test.html")
+
+
+@app.post("/new")
 async def new(payload: ImageData):
-    return {'image_data': payload.image_data}
+    return {"image_data": payload.image_data}
+
 
 handler = Mangum(app)
 
