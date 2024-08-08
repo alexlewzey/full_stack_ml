@@ -55,6 +55,13 @@ async def upload(request: Request, file: UploadFile = File(...)):  # noqa: B008
         },
     )
 
+@app.get('/test')
+async def test(request: Request):
+    return templates.TemplateResponse(request, 'test.html')
+
+@app.post('/new')
+async def new(payload: ImageData):
+    return {'image_data': payload.image_data}
 
 handler = Mangum(app)
 
