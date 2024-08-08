@@ -9,7 +9,7 @@ btn.onclick = function () {
             const base64Image = event.target.result.split(",")[1];
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/new", true);
+            xhr.open("POST", "/upload", true);
 
             xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -17,12 +17,7 @@ btn.onclick = function () {
                 const responseContainer = document.getElementById("result");
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        console.log(response);
-                        responseContainer.innerHTML = `
-                            <pre>${JSON.stringify(response, null, 2)}</pre>
-                            <img src="data:image/png;base64,${response.image_data}" alt="Uploaded Image" style="width: 500px; height: auto;"/>
-                        `;
+                        responseContainer.innerHTML = xhr.responseText;
                     } else {
                         console.error("Error:", xhr.statusText);
                         responseContainer.innerHTML =

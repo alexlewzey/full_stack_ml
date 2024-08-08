@@ -40,15 +40,14 @@ async def index(request: Request):
 
 @app.post("/upload")
 async def upload(request: Request, payload: ImageData):  # noqa: B008
-    img = Image.open(io.BytesIO(base64.b64decode(payload.image_data))).convert("RGB")
+    bytes_ = payload.image_data.encode("utf-8")
+    img = Image.open(io.BytesIO(base64.b64decode(bytes_))).convert("RGB")
     label = predictor.predict(img)
-    base64_encoded = base64.b64encode(contents).decode("utf-8")
     return templates.TemplateResponse(
         request,
         "upload.html",
         {
-            "base64_encoded": base64_encoded,
-            "content_type": file.content_type,
+            "image_base64": payload.image_data,
             "label": label,
         },
     )
