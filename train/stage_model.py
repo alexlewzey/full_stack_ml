@@ -43,7 +43,7 @@ class MLFlowExperiment:
 
 # %%
 root_dir = Path.cwd().parent
-img_path = root_dir / "images" / "example.png"
+img_path = root_dir / "images" / "dog_0.png"
 mlflow_dir = (root_dir / "mlruns").as_posix()
 mlflow.set_tracking_uri(f"file:{mlflow_dir}")
 experiment = MLFlowExperiment(experiment_name="cats_vs_dogs")

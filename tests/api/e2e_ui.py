@@ -7,7 +7,7 @@ import requests
 from utils.core import image_dir
 
 lambda_container_url: str = "http://api:8080/2015-03-31/functions/function/invocations"
-image_path = image_dir / "example.png"
+image_path = image_dir / "dog_0.png"
 
 
 def test_healthcheck():

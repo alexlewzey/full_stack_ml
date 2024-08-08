@@ -1,3 +1,6 @@
+import base64
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from api.ui import app
@@ -6,7 +9,8 @@ from utils.core import image_dir
 client = TestClient(app)
 
 
-path_tmp = image_dir / "example.png"
+path_dog_0 = image_dir / "dog_0.png"
+path_cat_0 = image_dir / "cat_0.jpg"
 
 
 def test_healthcheck():
@@ -23,18 +27,23 @@ def test_index():
     assert "Full Stack Machine Learning Project" in response.text
 
 
-def test_upload():
-    # with path_tmp.open("rb") as f:
-    #     img_b64 = base64.b64encode(f.read()).decode("utf-8")
-    # data = {"image_data": img_b64}
-    # response = client.post("/upload", json=data)
+def post_image_to_upload(path_img: Path):
+    with path_img.open("rb") as f:
+        image_base64 = base64.b64encode(f.read()).decode("utf-8")
+    payload = {"image_data": image_base64}
+    return client.post("/upload", json=payload)
 
-    with path_tmp.open("rb") as f:
-        files = {"file": f}
-        response = client.post("/upload", files=files)
 
+def test_upload_dog():
+    response = post_image_to_upload(path_dog_0)
     assert response.status_code == 200
-    assert "dog" in response.text
+    assert "It's a <b>dog</b>!" in response.text
+
+
+def test_upload_cat():
+    response = post_image_to_upload(path_cat_0)
+    assert response.status_code == 200
+    assert "It's a <b>cat</b>!" in response.text
 
 
 if __name__ == "__main__":

@@ -53,16 +53,6 @@ async def upload(request: Request, payload: ImageData):  # noqa: B008
     )
 
 
-@app.get("/test")
-async def test(request: Request):
-    return templates.TemplateResponse(request, "test.html")
-
-
-@app.post("/new")
-async def new(payload: ImageData):
-    return {"image_data": payload.image_data}
-
-
 handler = Mangum(app)
 
 if __name__ == "__main__":

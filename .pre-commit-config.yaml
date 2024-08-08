@@ -83,11 +83,6 @@ repos:
     entry: python -m pytest tests/
     language: system
     pass_filenames: false
-  - id: poetry-lock
-    name: poetry-lock
-    entry: poetry lock --no-update
-    language: system
-    pass_filenames: false
   - id: dockerignore
     name: dockerignore
     entry: make dockerignore
