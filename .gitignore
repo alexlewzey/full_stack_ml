@@ -9,6 +9,7 @@ tmp/
 *.zip
 *.pt
 *.ckpt
+.aws-sam
 
 *.swp
 package-lock.json

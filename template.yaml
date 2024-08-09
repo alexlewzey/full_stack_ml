@@ -9,6 +9,10 @@ Globals:
     - image/png
     - application/octet-stream
     - application/pdf
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"
 
 Resources:
   FastAPIFunction:
