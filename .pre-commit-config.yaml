@@ -19,7 +19,7 @@ repos:
   - id: detect-aws-credentials
   - id: detect-private-key
   - id: check-added-large-files
-    args: [--maxkb=20480]
+    args: [--maxkb=4000]
     exclude: images/ui_example.gif
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
   rev: v2.11.0
