@@ -20,6 +20,7 @@ repos:
   - id: detect-private-key
   - id: check-added-large-files
     args: [--maxkb=20480]
+    exclude: images/ui_example.gif
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
   rev: v2.11.0
   hooks:

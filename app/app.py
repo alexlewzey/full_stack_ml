@@ -1,30 +1,31 @@
+from pathlib import Path
+
+import aws_cdk.aws_apigateway as apigateway
 import aws_cdk.aws_ecr_assets as ecr_assets
-import aws_cdk.aws_iam as iam
 import aws_cdk.aws_lambda as lambda_
 import aws_cdk.aws_logs as logs
-import aws_cdk.aws_scheduler as scheduler
-from aws_cdk import App, Stack
+from aws_cdk import App, Duration, Stack
 from constructs import Construct
 
-SCHEDULE_EXPRESSION: str = "rate(1 hour)"
+root_dir = Path(__file__).parent.parent
 
 
-class HelloWorldStack(Stack):
-    def __init__(self, scope: Construct, construct_id: str, **kwargs):
+class CatVsDogStack(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         docker_image = ecr_assets.DockerImageAsset(
             self,
             "LambdaDockerImage",
-            directory="/workspaces/example_cdk",
-            file="lambda/Dockerfile",
-            platform=ecr_assets.Platform.LINUX_AMD64,
+            directory=root_dir.as_posix(),
+            file="api/Dockerfile",
+            platform=ecr_assets.Platform.LINUX_ARM64,
         )
 
         log_group = logs.LogGroup(
             self,
             "LambdaLogGroup",
-            retention=logs.RetentionDays.ONE_DAY,
+            retention=logs.RetentionDays.ONE_YEAR,
         )
 
         lambda_function = lambda_.DockerImageFunction(
@@ -34,32 +35,31 @@ class HelloWorldStack(Stack):
                 repository=docker_image.repository, tag_or_digest=docker_image.image_tag
             ),
             log_group=log_group,
+            architecture=lambda_.Architecture.ARM_64,
+            memory_size=512,
+            timeout=Duration.seconds(900),
         )
 
-        scheduler_role = iam.Role(
+        api = apigateway.LambdaRestApi(  # noqa: F841
             self,
-            "SchedulerRole",
-            assumed_by=iam.ServicePrincipal("scheduler.amazonaws.com"),
-        )
-        lambda_function.grant_invoke(scheduler_role)
-
-        cfn_schedule = scheduler.CfnSchedule(  # noqa: F841
-            self,
-            "MyCfnSchedule",
-            flexible_time_window=scheduler.CfnSchedule.FlexibleTimeWindowProperty(
-                mode="OFF"
-            ),
-            schedule_expression=SCHEDULE_EXPRESSION,
-            target=scheduler.CfnSchedule.TargetProperty(
-                arn=lambda_function.function_arn,
-                role_arn=scheduler_role.role_arn,
-                input="{}",
-            ),
-            name="LambdaScheduler",
+            "FastAPIApiGateway",
+            handler=lambda_function,
+            proxy=True,
+            binary_media_types=[
+                "image/jpeg",
+                "image/png",
+                "application/octet-stream",
+                "application/pdf",
+            ],
+            default_cors_preflight_options={
+                "allow_methods": apigateway.Cors.ALL_METHODS,
+                "allow_headers": ["Content-Type"],
+                "allow_origins": apigateway.Cors.ALL_ORIGINS,
+            },
         )
 
 
 app = App()
 
-HelloWorldStack(app, "HelloWorldStack")
+CatVsDogStack(app, "CatVsDogStack", env={"region": "eu-west-2"})
 app.synth()
