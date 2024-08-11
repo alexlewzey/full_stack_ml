@@ -24,12 +24,12 @@ constructs = "^10.3.0"
 pre-commit = "^3.7.1"
 pytest = "^8.2.2"
 requests = "^2.32.3"
-nbconvert = "^7.16.4"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.4"
 pathspec = "^0.12.1"
 kaggle = "^1.6.17"
+nbconvert = "^7.16.4"
 
 
 [tool.poetry.group.train.dependencies]
