@@ -1,7 +1,5 @@
 mlruns
 lightning_logs
-data/
-!data/.gitkeep
 tmp.*
 tmp/
 .DS_Store
