@@ -12,10 +12,10 @@ from . import metadata
 
 
 class CatsVsDogsDataset(Dataset):
-    def __init__(self, root_dir: Union[Path, str], transform: Callable):
-        self.root_dir = Path(root_dir)
+    def __init__(self, image_dir: Union[Path, str], transform: Callable):
+        self.image_dir = Path(image_dir)
         self.transform = transform
-        self.paths = list(self.root_dir.iterdir())
+        self.paths = list(self.image_dir.iterdir())
 
     def __len__(self) -> int:
         return len(self.paths)
@@ -30,8 +30,8 @@ class CatsVsDogsDataset(Dataset):
         return x, y
 
     @staticmethod
-    def get_label(path: Path) -> str:
-        return path.stem.split(".")[0]
+    def get_label(path: Path | str) -> str:
+        return Path(path).stem.split(".")[0]
 
 
 class CatVsDogsDataModule(L.LightningDataModule):
@@ -79,7 +79,7 @@ class CatVsDogsDataModule(L.LightningDataModule):
 
     def setup(self, stage: str) -> None:
         if stage == "fit":
-            ds = CatsVsDogsDataset(root_dir=self.train_dir, transform=self.transform)
+            ds = CatsVsDogsDataset(image_dir=self.train_dir, transform=self.transform)
             self.train_ds, self.valid_ds = split_dataset(ds, pct_train=self.pct_train)
 
     def train_dataloader(self) -> DataLoader:
