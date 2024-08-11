@@ -36,7 +36,7 @@ class ConvNet(nn.Module):
 class ImageClassifier(L.LightningModule):
     def __init__(self, model: nn.Module, lr: float = 1e-3):
         super().__init__()
-        self.save_hyperparameters()
+        self.save_hyperparameters(ignore=["model"])
         self.model = model
         self.lr = lr
         self.accuracy = Accuracy(task="binary")
@@ -45,7 +45,7 @@ class ImageClassifier(L.LightningModule):
         out = self.model.forward(x)
         return out
 
-    def _step(self, batch, batch_idx, set_name: str):
+    def _step(self, batch, set_name: str):
         x, y = batch
         yprob = self.model.forward(x)
         loss = F.cross_entropy(yprob, y)
@@ -56,10 +56,10 @@ class ImageClassifier(L.LightningModule):
         return loss
 
     def training_step(self, batch, batch_idx):
-        return self._step(batch, batch_idx, "train")
+        return self._step(batch, "train")
 
     def validation_step(self, batch, batch_idx):
-        return self._step(batch, batch_idx, "valid")
+        return self._step(batch, "valid")
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.lr)

@@ -41,7 +41,7 @@ class CatVsDogsDataModule(L.LightningDataModule):
         transform: Callable,
         pct_train: float = 0.8,
         batch_size: int = 32,
-        num_workers: int = 5,
+        num_workers: int = 9,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -53,29 +53,31 @@ class CatVsDogsDataModule(L.LightningDataModule):
         self.transform = transform
 
     def prepare_data(self) -> None:
-        self.data_dir.mkdir(exist_ok=True, parents=True)
+        if not self.data_dir.exists() or not self.train_dir.exists():
+            self.data_dir.mkdir(exist_ok=True, parents=True)
+            kaggle_path = Path.home() / ".kaggle" / "kaggle.json"
+            if not kaggle_path.exists():
+                raise Exception(f"{kaggle_path} does not exist, please add!")
+            kaggle_path.chmod(0o600)
 
-        kaggle_path = Path.home() / ".kaggle" / "kaggle.json"
-        if not kaggle_path.exists():
-            raise Exception(f"{kaggle_path} does not exist, please add!")
-        kaggle_path.chmod(0o600)
-
-        command = [
-            "kaggle",
-            "competitions",
-            "download",
-            "-c",
-            "dogs-vs-cats",
-            "-p",
-            self.data_dir.as_posix(),
-        ]
-        subprocess.run(command, check=True)  # noqa: S603
-        with zipfile.ZipFile(self.data_dir / "dogs-vs-cats.zip", "r") as f:
-            f.extractall(self.data_dir)
-        with zipfile.ZipFile(self.data_dir / "train.zip", "r") as f:
-            f.extractall(self.data_dir)
-        assert len(list((self.train_dir).iterdir())) == 25000
-        print("Dataset downloaded and extracted successfully.")
+            command = [
+                "kaggle",
+                "competitions",
+                "download",
+                "-c",
+                "dogs-vs-cats",
+                "-p",
+                self.data_dir.as_posix(),
+            ]
+            subprocess.run(command, check=True)  # noqa: S603
+            with zipfile.ZipFile(self.data_dir / "dogs-vs-cats.zip", "r") as f:
+                f.extractall(self.data_dir)
+            with zipfile.ZipFile(self.data_dir / "train.zip", "r") as f:
+                f.extractall(self.data_dir)
+            assert len(list((self.train_dir).iterdir())) == 25000
+            print("Dataset downloaded and extracted successfully.")
+        else:
+            print("Data already exists. Skipping download.")
 
     def setup(self, stage: str) -> None:
         if stage == "fit":

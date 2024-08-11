@@ -52,6 +52,16 @@ def cli() -> Config:
     return config
 
 
+def create_and_train_model(
+    data_module: L.LightningDataModule, lr: float, **kwargs
+) -> L.Trainer:
+    model = ConvNet()
+    train_module = ImageClassifier(model=model, lr=lr)
+    trainer = L.Trainer(default_root_dir=tmp_dir, **kwargs)
+    trainer.fit(train_module, datamodule=data_module)
+    return trainer
+
+
 def train_and_save_model(config: Config) -> None:
     torchscript_path: Path = tmp_dir / "model.torchscript"
     mlflow_dir = (root_dir / "mlruns").as_posix()
@@ -74,12 +84,12 @@ def train_and_save_model(config: Config) -> None:
             pct_train=config.pct_train,
             transform=preprocessing.transform,
         )
-        model = ConvNet()
-        train_module = ImageClassifier(model=model, lr=config.lr)
-        trainer = L.Trainer(
-            max_epochs=config.max_epochs, callbacks=callbacks, default_root_dir=tmp_dir
+        create_and_train_model(
+            data_module=data_module,
+            lr=config.lr,
+            max_epochs=config.max_epochs,
+            callbacks=callbacks,
         )
-        trainer.fit(train_module, datamodule=data_module)
 
         best_model = ImageClassifier.load_from_checkpoint(
             model_checkpoint.best_model_path

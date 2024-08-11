@@ -5,7 +5,7 @@ from torch import Tensor
 from torchvision import transforms
 
 from src.train.utils.loaders import CatsVsDogsDataset, split_dataset
-from src.utils.core import image_dir
+from src.utils.core import sample_dir
 
 
 @pytest.fixture
@@ -17,8 +17,8 @@ def mock_dataset() -> CatsVsDogsDataset:
             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
         ]
     )
-    sample_dir = image_dir / "train_sample"
-    return CatsVsDogsDataset(image_dir=sample_dir, transform=transform)
+    train_dir = sample_dir / "train"
+    return CatsVsDogsDataset(image_dir=train_dir, transform=transform)
 
 
 class TestCatsVsDogsDataset:
