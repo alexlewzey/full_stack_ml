@@ -10,8 +10,8 @@ from mangum import Mangum
 from PIL import Image
 from pydantic import BaseModel
 
-from api.predictor import Predictor
-from train.preprocessing import transform
+from src.api.predictor import Predictor
+from src.train.preprocessing import transform
 
 
 class ImageData(BaseModel):

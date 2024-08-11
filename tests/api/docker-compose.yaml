@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ../..
-      dockerfile: api/Dockerfile
+      dockerfile: src/api/Dockerfile
     image: api
     platform: linux/arm64
     ports:

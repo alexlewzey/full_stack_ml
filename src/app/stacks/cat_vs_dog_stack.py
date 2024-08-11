@@ -1,13 +1,10 @@
-from pathlib import Path
-
 import aws_cdk.aws_apigateway as apigateway
 import aws_cdk.aws_ecr_assets as ecr_assets
 import aws_cdk.aws_lambda as lambda_
 import aws_cdk.aws_logs as logs
-from aws_cdk import App, Duration, Stack
+from aws_cdk import Duration, Stack
 from constructs import Construct
-
-root_dir = Path(__file__).parent.parent
+from utils.core import root_dir
 
 
 class CatVsDogStack(Stack):
@@ -57,9 +54,3 @@ class CatVsDogStack(Stack):
                 "allow_origins": apigateway.Cors.ALL_ORIGINS,
             },
         )
-
-
-app = App()
-
-CatVsDogStack(app, "CatVsDogStack", env={"region": "eu-west-2"})
-app.synth()

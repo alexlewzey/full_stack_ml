@@ -5,7 +5,7 @@ from typing import Any
 
 import requests
 
-from utils.core import image_dir
+from src.utils.core import image_dir
 
 lambda_container_url: str = "http://api:8080/2015-03-31/functions/function/invocations"
 path_dog_0 = image_dir / "dog_0.png"

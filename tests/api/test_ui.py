@@ -3,8 +3,8 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from api.ui import app
-from utils.core import image_dir
+from src.api.ui import app
+from src.utils.core import image_dir
 
 client = TestClient(app)
 
