@@ -6,8 +6,15 @@ from pathlib import Path
 import mlflow
 import pandas as pd
 from mlflow import MlflowClient
+from PIL import Image
+from predictor import Predictor
 
-from src.utils.core import root_dir
+from src.train.utils.preprocessing import transform
+from src.utils.core import image_dir, root_dir
+
+staged_dir = root_dir / "api" / "staged_model"
+staged_file = staged_dir / "model.torchscript"
+mlflow_dir = root_dir / "mlruns"
 
 
 @dataclass
@@ -43,7 +50,7 @@ class MLFlowExperiment:
         return pd.DataFrame(data)
 
     def get_artifact_path(self, run_id: str, path: str) -> Path:
-        return Path.cwd().parent / f"mlruns/{self.experiment_id}/{run_id}/{path}"
+        return mlflow_dir / f"{self.experiment_id}/{run_id}/{path}"
 
     def get_best_run_id(self, column: str, ascending: bool):
         return (
@@ -54,8 +61,7 @@ class MLFlowExperiment:
 
 
 def stage_model(config: Config) -> None:
-    mlflow_dir = (root_dir / "mlruns").as_posix()
-    mlflow.set_tracking_uri(f"file:{mlflow_dir}")
+    mlflow.set_tracking_uri(f"file:{mlflow_dir.as_posix()}")
     experiment = MLFlowExperiment(experiment_name=config.experiment_name)
     run_id = (
         config.run_id
@@ -65,12 +71,20 @@ def stage_model(config: Config) -> None:
         )
     )
     torchscript_path = experiment.get_artifact_path(
-        run_id, "artifacts/model.torchscript"
+        run_id, f"artifacts/{staged_file.name}"
     )
     assert torchscript_path.exists()
-    dir_staged = root_dir / "api" / "staged_model"
-    dir_staged.mkdir(exist_ok=True, parents=True)
-    shutil.copy2(torchscript_path, dir_staged / torchscript_path.name)
+    staged_dir.mkdir(exist_ok=True, parents=True)
+    shutil.copy2(torchscript_path, staged_file)
+
+
+def test_staged_model() -> None:
+    predictor = Predictor(staged_file.as_posix(), transform)
+    img_dog = Image.open(image_dir / "dog_0.png")
+    assert predictor.predict(img_dog) == "dog"
+
+    img_cat = Image.open(image_dir / "cat_0.jpg")
+    assert predictor.predict(img_cat) == "cat"
 
 
 def main() -> None:
@@ -99,6 +113,7 @@ def main() -> None:
         print("run_id argument detected, column and ascending will be ignored.")
     config = Config(**args)
     stage_model(config)
+    test_staged_model()
 
 
 if __name__ == "__main__":
