@@ -4,5 +4,9 @@
         "-v"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "editor.rulers": [88, 120],
+    "python.defaultInterpreterPath": "${localWorkspaceFolder}/.venv/bin/python",
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.pythonPath": "${localWorkspaceFolder}/.venv/bin/python"
 }

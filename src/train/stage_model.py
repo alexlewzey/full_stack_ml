@@ -7,12 +7,12 @@ import mlflow
 import pandas as pd
 from mlflow import MlflowClient
 from PIL import Image
-from predictor import Predictor
 
+from src.api.predictor import Predictor
 from src.train.utils.preprocessing import transform
 from src.utils.core import image_dir, root_dir
 
-staged_dir = root_dir / "api" / "staged_model"
+staged_dir = root_dir / "src" / "api" / "staged_model"
 staged_file = staged_dir / "model.torchscript"
 mlflow_dir = root_dir / "mlruns"
 
@@ -114,6 +114,7 @@ def main() -> None:
     config = Config(**args)
     stage_model(config)
     test_staged_model()
+    print("model successfully staged!")
 
 
 if __name__ == "__main__":
