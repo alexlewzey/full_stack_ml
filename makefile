@@ -1,3 +1,7 @@
+install:
+	rm -rf .venv/
+	poetry install
+
 test:
 	@pre-commit run --all-files
 
@@ -12,7 +16,7 @@ app-deploy:
 	cdk deploy --require-approval never
 
 train:
-	@python -m src.train.train
+	@python -mW src.train.train
 
 train-monitor:
 	@mlflow ui --host 0.0.0.0 --port 8080

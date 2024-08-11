@@ -22,3 +22,5 @@ RUN curl -LO https://github.com/jwilder/dockerize/releases/download/v0.7.0/docke
 RUN wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 && \
     mv /tmp/hadolint /usr/local/bin/hadolint && \
     chmod +x /usr/local/bin/hadolint
+
+

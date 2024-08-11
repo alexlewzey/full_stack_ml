@@ -12,7 +12,7 @@ L.seed_everything(42, workers=True)
 
 
 def data_module():
-    return CatVsDogsDataModule(data_dir=sample_dir, transform=transform, num_workers=9)
+    return CatVsDogsDataModule(data_dir=sample_dir, transform=transform, num_workers=0)
 
 
 mock_data_module = pytest.fixture(data_module)
@@ -35,4 +35,5 @@ def test_trainer_overfit_batches(mock_data_module):
     )
     final_accuracy = trainer.callback_metrics["train_acc"].item()
     assert final_accuracy > 0.99
-    assert (datetime.now() - start) < timedelta(seconds=5)
+    duration = datetime.now() - start
+    assert duration < timedelta(seconds=5)

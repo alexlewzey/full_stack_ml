@@ -41,7 +41,7 @@ class CatVsDogsDataModule(L.LightningDataModule):
         transform: Callable,
         pct_train: float = 0.8,
         batch_size: int = 32,
-        num_workers: int = 9,
+        num_workers: int = 5,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -51,6 +51,7 @@ class CatVsDogsDataModule(L.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.transform = transform
+        self.persistent_workers = True if self.num_workers > 0 else False
 
     def prepare_data(self) -> None:
         if not self.data_dir.exists() or not self.train_dir.exists():
@@ -90,7 +91,7 @@ class CatVsDogsDataModule(L.LightningDataModule):
             batch_size=self.batch_size,
             shuffle=True,
             num_workers=self.num_workers,
-            persistent_workers=True,
+            persistent_workers=self.persistent_workers,
             pin_memory=True,
         )
 
@@ -100,7 +101,7 @@ class CatVsDogsDataModule(L.LightningDataModule):
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=self.num_workers,
-            persistent_workers=True,
+            persistent_workers=self.persistent_workers,
             pin_memory=True,
         )
 
