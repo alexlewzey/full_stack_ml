@@ -11,7 +11,7 @@ from PIL import Image
 from pydantic import BaseModel
 
 from src.api.predictor import Predictor
-from src.train.preprocessing import transform
+from src.train.utils.preprocessing import transform
 
 
 class ImageData(BaseModel):

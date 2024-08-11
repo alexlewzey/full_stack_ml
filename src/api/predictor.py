@@ -4,7 +4,7 @@ from typing import Callable
 import torch
 from PIL import Image
 
-from src.train.metadata import DECODING
+from src.train.utils.metadata import DECODING
 
 
 class Predictor:

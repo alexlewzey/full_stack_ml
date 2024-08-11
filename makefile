@@ -11,5 +11,8 @@ app-deploy:
 	cdk bootstrap
 	cdk deploy --require-approval never
 
+train:
+	@python -m src.train.train
+
 train-monitor:
 	@mlflow ui --host 0.0.0.0 --port 8080

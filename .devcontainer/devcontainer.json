@@ -43,10 +43,10 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "onCreateCommand": "poetry install",
-	"postStartCommand": "poetry install && poetry run pre-commit install --install-hooks",
+	"postStartCommand": "git config --global --add safe.directory $(pwd) && poetry install && poetry run pre-commit install --install-hooks",
 	// Configure tool-specific properties.
 	// "customizations": {},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	"remoteUser": "root"
+	// "remoteUser": "root"
 }

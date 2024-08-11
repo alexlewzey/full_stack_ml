@@ -4,10 +4,11 @@ from pathlib import Path
 from typing import Callable, Union
 
 import lightning as L  # noqa: N812
-import metadata
 import torch
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset, random_split
+
+from . import metadata
 
 
 class CatsVsDogsDataset(Dataset):
