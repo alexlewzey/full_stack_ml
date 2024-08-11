@@ -1,5 +1,5 @@
 {
-  "app": "python3 app/app.py",
+  "app": "python3 -m src.app.app",
   "watch": {
     "include": [
       "**"

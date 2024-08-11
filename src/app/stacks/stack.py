@@ -4,7 +4,8 @@ import aws_cdk.aws_lambda as lambda_
 import aws_cdk.aws_logs as logs
 from aws_cdk import Duration, Stack
 from constructs import Construct
-from utils.core import root_dir
+
+from src.utils.core import root_dir
 
 
 class CatVsDogStack(Stack):
@@ -15,7 +16,7 @@ class CatVsDogStack(Stack):
             self,
             "LambdaDockerImage",
             directory=root_dir.as_posix(),
-            file="api/Dockerfile",
+            file="src/api/Dockerfile",
             platform=ecr_assets.Platform.LINUX_ARM64,
         )
 
