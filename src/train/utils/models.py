@@ -41,6 +41,14 @@ class ImageClassifier(L.LightningModule):
         self.lr = lr
         self.accuracy = Accuracy(task="binary")
 
+    @classmethod
+    def load_from_checkpoint(cls, checkpoint_path, map_location=None):
+        checkpoint = torch.load(checkpoint_path, map_location=map_location)
+        model = ConvNet()
+        instance = cls(model=model, **checkpoint["hyper_parameters"])
+        instance.load_state_dict(checkpoint["state_dict"])
+        return instance
+
     def forward(self, x):
         out = self.model.forward(x)
         return out
