@@ -37,7 +37,7 @@ jobs:
         poetry config virtualenvs.create false
         poetry install --no-interaction --no-ansi --no-root
         sudo apt-get install shfmt
-    
+
     - name: Install hadolint
       run: |
         wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
