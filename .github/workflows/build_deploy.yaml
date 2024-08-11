@@ -31,13 +31,18 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: Install dependencies
+    - name: Install python dependencies
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         poetry config virtualenvs.create false
         poetry install --no-interaction --no-ansi --no-root
         sudo apt-get install shfmt
-
+    
+    - name: Install hadolint
+      run: |
+        wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+        mv /tmp/hadolint /usr/local/bin/hadolint
+        chmod +x /usr/local/bin/hadolint
 
     - name: Run pre-commit and unit tests
       run: |
