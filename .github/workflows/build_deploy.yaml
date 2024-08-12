@@ -20,7 +20,7 @@ on:
 
 
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -36,10 +36,10 @@ jobs:
         curl -sSL https://install.python-poetry.org | python3 -
         poetry config virtualenvs.create false
         poetry install --no-interaction --no-ansi --no-root
-        sudo apt-get install shfmt
 
-    - name: Install hadolint
+    - name: Install shell dependencies
       run: |
+        sudo apt-get install shfmt
         wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
         mv /tmp/hadolint /usr/local/bin/hadolint
         chmod +x /usr/local/bin/hadolint
@@ -47,6 +47,17 @@ jobs:
     - name: Run pre-commit and unit tests
       run: |
         poetry run pre-commit run --all-files
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
+    - name: Install AWS CDK
+      run: install -g aws-cdk
+
+    - name: CDK Synth
+      run: cdk synth
 
 
     # - name: Configure AWS credentials for staging
