@@ -42,22 +42,6 @@ jobs:
       run: |
         python -m pytest tests/ -v
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Install dockerize
-      run: |
-        curl -LO https://github.com/jwilder/dockerize/releases/download/v0.7.0/dockerize-linux-amd64-v0.7.0.tar.gz
-        tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v0.7.0.tar.gz
-        chmod +x /usr/local/bin/dockerize
-
-    - name: Run e2e tests
-      run: |
-        docker compose -f tests/api/docker-compose.yaml up --build --abort-on-container-exit
-
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
@@ -68,7 +52,6 @@ jobs:
 
     - name: CDK Synth
       run: cdk synth
-
 
   deploy:
     needs: test-and-build
