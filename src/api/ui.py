@@ -3,7 +3,6 @@ import io
 from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from mangum import Mangum
@@ -27,12 +26,6 @@ templates = Jinja2Templates(directory=dir_api / "templates")
 torchscript_path = dir_api / "staged_model" / "model.torchscript"
 assert torchscript_path.exists()
 predictor = Predictor(torchscript_path=torchscript_path, transform=transform)
-
-
-@app.get("/favicon.ico")
-async def favicon():
-    path_favicon = dir_api / "static" / "favicon.ico"
-    return FileResponse(path_favicon.as_posix())
 
 
 @app.get("/healthcheck")

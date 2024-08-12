@@ -1,0 +1,58 @@
+name: Destroy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Which environment to deploy to:'
+        required: true
+        type: choice
+        options:
+        - staging
+        - prod
+        default: staging
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+
+    - name: Install python dependencies
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        poetry config virtualenvs.create false
+        poetry install --no-interaction --no-ansi --no-root --only main,app
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
+    - name: Install AWS CDK
+      run: npm install -g aws-cdk
+
+    - name: Configure AWS credentials for staging
+      if: ${{ inputs.environment == 'staging' }}
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+        aws-region: eu-west-2
+
+    - name: Configure AWS credentials for prod
+      if: ${{ inputs.environment == 'prod' }}
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: eu-west-2
+
+    - name: CDK Deploy
+      run: cdk destroy --force
