@@ -6,6 +6,7 @@ lint:
 	pre-commit run --all-files
 
 test:
+	poetry lock
 	pre-commit run --all-files
 	python -m pytest tests/ -v
 	docker compose -f tests/api/docker-compose.yaml up --build --abort-on-container-exit
