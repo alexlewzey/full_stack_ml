@@ -31,22 +31,22 @@ jobs:
       with:
         python-version: '3.12'
 
-    # - name: Install python dependencies
-    #   run: |
-    #     curl -sSL https://install.python-poetry.org | python3 -
-    #     poetry config virtualenvs.create false
-    #     poetry install --no-interaction --no-ansi --no-root
+    - name: Install python dependencies
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        poetry config virtualenvs.create false
+        poetry install --no-interaction --no-ansi --no-root
 
-    # - name: Install shell dependencies
-    #   run: |
-    #     sudo apt-get install shfmt
-    #     wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
-    #     mv /tmp/hadolint /usr/local/bin/hadolint
-    #     chmod +x /usr/local/bin/hadolint
+    - name: Install shell dependencies
+      run: |
+        sudo apt-get install shfmt
+        wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+        mv /tmp/hadolint /usr/local/bin/hadolint
+        chmod +x /usr/local/bin/hadolint
 
-    # - name: Run pre-commit and unit tests
-    #   run: |
-    #     poetry run pre-commit run --all-files
+    - name: Run pre-commit and unit tests
+      run: |
+        poetry run pre-commit run --all-files
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
