@@ -1,0 +1,106 @@
+name: Test, build and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Which environment to deploy to:'
+        required: true
+        type: choice
+        options:
+        - staging
+        - prod
+        default: staging
+  pull_request:
+    branches:
+    - main
+  push:
+    branches:
+    - main
+
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+
+    - name: Install python dependencies
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        poetry config virtualenvs.create false
+        poetry install --no-interaction --no-ansi --no-root
+
+    - name: Install shell dependencies
+      run: |
+        sudo apt-get install shfmt
+        wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+        mv /tmp/hadolint /usr/local/bin/hadolint
+        chmod +x /usr/local/bin/hadolint
+
+    - name: Run pre-commit and unit tests
+      run: |
+        poetry run pre-commit run --all-files
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
+    - name: Install AWS CDK
+      run: npm install -g aws-cdk
+
+    - name: CDK Synth
+      run: cdk synth
+
+
+  deploy:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+
+    - name: Install python dependencies
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        poetry config virtualenvs.create false
+        poetry install --no-interaction --no-ansi --no-root
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
+    - name: Install AWS CDK
+      run: npm install -g aws-cdk
+
+    - name: Configure AWS credentials for staging
+      if: ${{ github.ref != 'refs/heads/main' }}
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+        aws-region: eu-west-2
+
+    - name: Configure AWS credentials for prod
+      if: ${{ github.ref == 'refs/heads/main' }}
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: eu-west-2
+
+    - name: CDK Deploy
+      run: cdk deploy --all --require-approval never

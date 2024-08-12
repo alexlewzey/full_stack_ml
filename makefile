@@ -4,6 +4,7 @@ install:
 
 test:
 	pre-commit run --all-files
+	python -m pytest tests/ -v
 
 e2e:
 	docker compose -f tests/api/docker-compose.yaml up --build --abort-on-container-exit
