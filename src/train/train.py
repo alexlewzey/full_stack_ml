@@ -1,7 +1,7 @@
 """CLI script that trains a model and saves the metrics and artifacts to mlflow."""
 import argparse
 import json
-import warnings
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -16,7 +16,7 @@ from .utils import preprocessing
 from .utils.loaders import CatVsDogsDataModule
 from .utils.models import ConvNet, ImageClassifier
 
-warnings.filterwarnings("ignore", message="Checkpoint logging is skipped")
+logging.getLogger("mlflow").setLevel(logging.ERROR)
 
 
 @dataclass

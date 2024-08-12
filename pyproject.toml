@@ -5,6 +5,7 @@ description = ""
 authors = ["Alexander Lewzey <a.lewzey@gmail.com>"]
 readme = "README.md"
 package-mode = false
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.12"

@@ -19,7 +19,7 @@ deploy:
 	cdk deploy --require-approval never
 
 train:
-	python -m src.train.train
+	PYTHONWARNINGS="ignore" python -m src.train.train
 
 stage:
 	python -m src.train.stage_model
