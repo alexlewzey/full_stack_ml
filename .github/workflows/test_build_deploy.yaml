@@ -67,6 +67,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
@@ -76,7 +79,7 @@ jobs:
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         poetry config virtualenvs.create false
-        poetry install --no-interaction --no-ansi --no-root
+        poetry install --no-interaction --no-ansi --no-root --only main,app
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -101,6 +104,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
         aws-region: eu-west-2
+
 
     - name: CDK Deploy
       run: cdk deploy --all --require-approval never
