@@ -30,6 +30,7 @@ ipykernel = "^6.29.4"
 pathspec = "^0.12.1"
 kaggle = "^1.6.17"
 nbconvert = "^7.16.4"
+ruff = "^0.5.7"
 
 
 [tool.poetry.group.train.dependencies]

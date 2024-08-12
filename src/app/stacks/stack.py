@@ -1,8 +1,8 @@
-import aws_cdk.aws_apigateway as apigateway
-import aws_cdk.aws_ecr_assets as ecr_assets
-import aws_cdk.aws_lambda as lambda_
-import aws_cdk.aws_logs as logs
 from aws_cdk import Duration, Stack
+from aws_cdk import aws_apigateway as apigateway
+from aws_cdk import aws_ecr_assets as ecr_assets
+from aws_cdk import aws_lambda as lambda_
+from aws_cdk import aws_logs as logs
 from constructs import Construct
 
 from src.utils.core import root_dir
