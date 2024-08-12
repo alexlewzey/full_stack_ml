@@ -26,7 +26,9 @@ app.mount("/static", StaticFiles(directory=dir_api / "static"), name="static")
 templates = Jinja2Templates(directory=dir_api / "templates")
 
 torchscript_path = dir_api / "staged_model" / "model.torchscript"
-assert torchscript_path.exists()
+if not torchscript_path.exists():
+    print("model.torchscript does not exist, loading default.torchscript")
+    torchscript_path = torchscript_path.with_name("default.torchscript")
 predictor = Predictor(torchscript_path=torchscript_path, transform=transform)
 
 
