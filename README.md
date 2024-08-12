@@ -1,6 +1,6 @@
 # Full Stack ML
 
-A full-stack machine learning project that classifies images as either a cat or a dog. This project showcases a complete ML pipeline from model training to production deployment, along with best practices in software engineering and DevOps.
+A full-stack machine learning (image classification) project that includes the complete ML pipeline from model training to production deployment, along with best practices in software engineering and DevOps.
 
 ## UI Example
 
