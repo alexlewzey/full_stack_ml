@@ -8,7 +8,6 @@ tmp/
 *.pt
 *.ckpt
 .aws-sam
-*.torchscript
 
 *.swp
 package-lock.json

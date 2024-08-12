@@ -1,4 +1,5 @@
 # hadolint global ignore=DL3045
+# container that acts as client in the end-to-ends tests
 FROM python:3.12-bullseye
 
 COPY . .

@@ -1,7 +1,5 @@
-"""Script that deploys the user interface and prediction endpoint of the lambda api.
-
-Uses fastapi and mangum to map the http request into lambda proxy.
-"""
+"""Script that contains the code for the lambda api which uses fastapi and mangum to map
+the http request into lambda proxy."""
 import base64
 import io
 from pathlib import Path

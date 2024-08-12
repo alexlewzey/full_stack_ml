@@ -1,3 +1,4 @@
+# script that runs end-to-end tests by running the lambda container locally and make requests to it from another container
 version: '3.8'
 
 services:
