@@ -1,3 +1,4 @@
+"""CLI script that trains a model and saves the metrics and artifacts to mlflow."""
 import argparse
 import json
 import warnings

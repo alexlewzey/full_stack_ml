@@ -1,3 +1,4 @@
+"""Module that contains `Predictor` which loads model artifact and make predicitons."""
 from pathlib import Path
 from typing import Callable
 

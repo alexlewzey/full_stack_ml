@@ -1,3 +1,5 @@
+"""Module that contains the CDK stack i.e. declares the infrastructure to be created in
+S3."""
 from aws_cdk import Duration, Stack
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_ecr_assets as ecr_assets

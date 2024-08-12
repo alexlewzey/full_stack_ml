@@ -1,3 +1,4 @@
+"""Module of pytorch/lightning models."""
 import lightning as L  # noqa: N812
 import torch
 import torch.nn.functional as F  # noqa: N812

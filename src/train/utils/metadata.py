@@ -1,4 +1,4 @@
-"""Cats vs Dogs metadata."""
+"""Cats vs Dogs dataset metadata."""
 from types import MappingProxyType
 
 ENCODING = MappingProxyType(

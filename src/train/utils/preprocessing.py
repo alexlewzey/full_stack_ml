@@ -1,3 +1,4 @@
+"""Module of model preprocessors."""
 from torchvision import transforms
 
 transform = transforms.Compose(

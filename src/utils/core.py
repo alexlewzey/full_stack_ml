@@ -1,3 +1,4 @@
+"""Module containing general varibles such as project paths."""
 from pathlib import Path
 
 root_dir = Path(__file__).parent.parent.parent

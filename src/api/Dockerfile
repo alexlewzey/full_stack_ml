@@ -1,3 +1,4 @@
+# Specifies the lambda image used to containerise the api/ui.
 FROM public.ecr.aws/lambda/python:3.12-arm64
 
 WORKDIR "${LAMBDA_TASK_ROOT}"

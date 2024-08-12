@@ -1,3 +1,4 @@
+"""Script that deploys CDK stack to AWS."""
 from aws_cdk import App
 
 from .stacks.stack import CatVsDogStack

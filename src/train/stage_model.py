@@ -1,3 +1,5 @@
+"""CLI script that stages trained model i.e. grabs a model artifact from mlflow adds it
+to the staging directory and tests it can be loaded for predictions."""
 import argparse
 import shutil
 from dataclasses import dataclass

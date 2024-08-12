@@ -1,3 +1,4 @@
+"""Module of pytorch/lightning datasets/data modules."""
 import subprocess
 import zipfile
 from pathlib import Path
