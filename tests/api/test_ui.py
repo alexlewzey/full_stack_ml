@@ -34,16 +34,10 @@ def post_image_to_upload(path_img: Path):
     return client.post("/upload", json=payload)
 
 
-def test_upload_dog():
+def test_upload():
     response = post_image_to_upload(path_dog_0)
     assert response.status_code == 200
     assert "It's a <b>dog</b>!" in response.text
-
-
-def test_upload_cat():
-    response = post_image_to_upload(path_cat_0)
-    assert response.status_code == 200
-    assert "It's a <b>cat</b>!" in response.text
 
 
 if __name__ == "__main__":

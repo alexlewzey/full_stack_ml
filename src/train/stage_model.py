@@ -1,6 +1,7 @@
 """CLI script that stages trained model i.e. grabs a model artifact from mlflow adds it
 to the staging directory and tests it can be loaded for predictions."""
 import argparse
+import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,7 +12,7 @@ from mlflow import MlflowClient
 from PIL import Image
 
 from src.api.predictor import Predictor
-from src.train.utils.preprocessing import transform
+from src.train.utils.preprocessing import build_transforms
 from src.utils.core import image_dir, root_dir
 
 staged_dir = root_dir / "src" / "api" / "staged_model"
@@ -81,6 +82,10 @@ def stage_model(config: Config) -> None:
 
 
 def test_staged_model() -> None:
+    # todo
+    with (root_dir / "configs" / "default_config.json").open() as f:
+        config = json.load(f)
+    transform = build_transforms(config["transforms_config"])
     predictor = Predictor(staged_file.as_posix(), transform)
     img_dog = Image.open(image_dir / "dog_0.png")
     assert predictor.predict(img_dog) == "dog"

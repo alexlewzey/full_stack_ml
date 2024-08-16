@@ -6,7 +6,6 @@ lint:
 	pre-commit run --all-files
 
 test:
-	poetry lock
 	pre-commit run --all-files
 	python -m pytest tests/ -v
 	docker compose -f tests/api/docker-compose.yaml up --build --abort-on-container-exit
@@ -19,7 +18,7 @@ deploy:
 	cdk deploy --require-approval never
 
 train:
-	PYTHONWARNINGS="ignore" python -m src.train.train
+	PYTHONWARNINGS="ignore" python -m src.train.train --model pretrained_res_net --lr 1e-4
 
 stage:
 	python -m src.train.stage_model

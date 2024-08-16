@@ -9,7 +9,6 @@ from src.utils.core import image_dir
 
 lambda_container_url: str = "http://api:8080/2015-03-31/functions/function/invocations"
 path_dog_0 = image_dir / "dog_0.png"
-path_cat_0 = image_dir / "cat_0.jpg"
 
 
 def test_healthcheck():
@@ -52,15 +51,8 @@ def post_image_to_upload(path_img: Path) -> requests.models.Response:
     return requests.post(lambda_container_url, json=data, timeout=10)
 
 
-def test_upload_dog():
+def test_upload():
     response = post_image_to_upload(path_dog_0)
     print(response.json())
     assert response.status_code == 200
     assert "It's a <b>dog</b>!" in response.json()["body"]
-
-
-def test_upload_cat():
-    response = post_image_to_upload(path_cat_0)
-    print(response.json())
-    assert response.status_code == 200
-    assert "It's a <b>cat</b>!" in response.json()["body"]

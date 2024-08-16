@@ -2,6 +2,7 @@
 the http request into lambda proxy."""
 import base64
 import io
+import json
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -12,7 +13,8 @@ from PIL import Image
 from pydantic import BaseModel
 
 from src.api.predictor import Predictor
-from src.train.utils.preprocessing import transform
+from src.train.utils.preprocessing import build_transforms
+from src.utils.core import root_dir
 
 
 class ImageData(BaseModel):
@@ -24,6 +26,11 @@ dir_api = Path(__file__).parent
 app = FastAPI()
 app.mount("/static", StaticFiles(directory=dir_api / "static"), name="static")
 templates = Jinja2Templates(directory=dir_api / "templates")
+
+# todo: load transforms and
+with (root_dir / "configs" / "default_config.json").open() as f:
+    config = json.load(f)
+transform = build_transforms(config["transforms_config"])
 
 torchscript_path = dir_api / "staged_model" / "model.torchscript"
 if not torchscript_path.exists():

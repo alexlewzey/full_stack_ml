@@ -1,95 +1,73 @@
-"""Module of pytorch/lightning models."""
-import lightning as L  # noqa: N812
+"""Module of pytorch models."""
 import torch
-import torch.nn.functional as F  # noqa: N812
-from lightning.pytorch.tuner.tuning import Tuner
+import torchvision
 from torch import nn
-from torchmetrics import Accuracy
 
 
 class ConvNet(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes=2):
         super().__init__()
-        self.layer1 = nn.Sequential(
+        self.features = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-        )
-        self.layer2 = nn.Sequential(
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 112x112
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 56x56
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 28x28
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 14x14
+            nn.Conv2d(256, 512, kernel_size=3, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 7x7
         )
-        self.fc1 = nn.Linear(8 * 8 * 64, 1000)
-        self.fc2 = nn.Linear(1000, 2)
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.classifier = nn.Sequential(
+            nn.Linear(512, 1000),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(1000, num_classes),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.features(x)
+        x = self.avgpool(x)
+        x = torch.flatten(x, 1)
+        x = self.classifier(x)
+        return x
+
+
+class PretrainedResNet(nn.Module):
+    def __init__(self, num_classes: int = 2):
+        super().__init__()
+        self.num_classes = num_classes
+        self.model = torchvision.models.resnet18(pretrained=True)
+        n_features = self.model.fc.in_features
+        for param in self.model.parameters():
+            param.requires_grad = False
+        self.model.fc = nn.Linear(n_features, num_classes)
 
     def forward(self, x) -> torch.Tensor:
-        out = self.layer1(x)
-        out = self.layer2(out)
-        out = out.reshape(out.size(0), -1)
-        out = self.fc1(out)
-        out = self.fc2(out)
-        return out
+        """x.shape=(batch_size, 3, 224, 224)"""
+        return self.model(x)
 
 
-class ImageClassifier(L.LightningModule):
-    def __init__(self, model: nn.Module, lr: float = 1e-3):
-        super().__init__()
-        self.save_hyperparameters(ignore=["model"])
-        self.model = model
-        self.lr = lr
-        self.accuracy = Accuracy(task="binary")
-
-    @classmethod
-    def load_from_checkpoint(cls, checkpoint_path, map_location=None):
-        checkpoint = torch.load(checkpoint_path, map_location=map_location)
-        model = ConvNet()
-        instance = cls(model=model, **checkpoint["hyper_parameters"])
-        instance.load_state_dict(checkpoint["state_dict"])
-        return instance
-
-    def forward(self, x):
-        out = self.model.forward(x)
-        return out
-
-    def _step(self, batch, set_name: str):
-        x, y = batch
-        yprob = self.model.forward(x)
-        loss = F.cross_entropy(yprob, y)
-        self.log(f"{set_name}_loss", loss, on_epoch=True, on_step=False, prog_bar=True)
-        yhat = yprob.argmax(-1)
-        acc = self.accuracy(yhat, y)
-        self.log(f"{set_name}_acc", acc, on_epoch=True, on_step=False, prog_bar=True)
-        return loss
-
-    def training_step(self, batch, batch_idx):
-        return self._step(batch, "train")
-
-    def validation_step(self, batch, batch_idx):
-        return self._step(batch, "valid")
-
-    def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.lr)
-
-
-class ModelTuner:
-    def __init__(
-        self,
-        trainer: L.Trainer,
-        model: L.LightningModule,
-        data_module: L.LightningDataModule,
-    ):
-        self.tuner = Tuner(trainer)
-        self.model = model
-        self.data_module = data_module
-
-    def find_batch_size(self):
-        self.tuner.scale_batch_size(self.model, datamodule=self.data_module)
-
-    def find_learning_rate(self):
-        lr_finder = self.tuner.lr_find(self.model, datamodule=self.data_module)
-        fig = lr_finder.plot(suggest=True)
-        self.lr = lr_finder.suggestion()
-        fig.show()
+def get_model(name: str, **kwargs) -> nn.Module:
+    models: dict[str, nn.Module] = {
+        "conv_net": ConvNet,
+        "pretrained_res_net": PretrainedResNet,
+    }
+    try:
+        return models[name](**kwargs)
+    except KeyError as e:
+        raise ValueError(
+            f"{name} does not exist. Did you mean: {list(models.keys())}"
+        ) from e

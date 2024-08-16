@@ -7,7 +7,8 @@ RUN pip install poetry==1.8.3 --no-cache-dir && \
     poetry config virtualenvs.create false && \
     poetry install --only main,ui --no-interaction --no-ansi --no-root
 
-COPY src/api "${LAMBDA_TASK_ROOT}/src/api"
-COPY src/train "${LAMBDA_TASK_ROOT}/src/train"
+COPY src "${LAMBDA_TASK_ROOT}/src"
+COPY configs "${LAMBDA_TASK_ROOT}/configs"
+
 
 CMD [ "src.api.ui.handler" ]
