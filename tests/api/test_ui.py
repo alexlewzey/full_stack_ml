@@ -1,5 +1,6 @@
 import base64
 from pathlib import Path
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
@@ -34,10 +35,16 @@ def post_image_to_upload(path_img: Path):
     return client.post("/upload", json=payload)
 
 
+class MockPredictor:
+    def predict(self, img):
+        return "dog"
+
+
 def test_upload():
-    response = post_image_to_upload(path_dog_0)
-    assert response.status_code == 200
-    assert "It's a <b>dog</b>!" in response.text
+    with patch("src.api.predictor.Predictor", MockPredictor):
+        response = post_image_to_upload(path_dog_0)
+        assert response.status_code == 200
+        assert "It's a <b>dog</b>!" in response.text
 
 
 if __name__ == "__main__":

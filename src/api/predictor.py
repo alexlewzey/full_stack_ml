@@ -12,6 +12,9 @@ class Predictor:
     def __init__(
         self, torchscript_path: str | Path, transform: Callable, device: str = "cpu"
     ):
+        torchscript_path = Path(torchscript_path)
+        if not torchscript_path.exists():
+            raise FileNotFoundError("no file found at torchscript_path.")
         self.transform = transform
         self.device = torch.device(device)
         self.model = torch.jit.load(torchscript_path, map_location=self.device).to(

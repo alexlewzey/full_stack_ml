@@ -33,9 +33,6 @@ with (root_dir / "configs" / "default_config.json").open() as f:
 transform = build_transforms(config["transforms_config"])
 
 torchscript_path = dir_api / "staged_model" / "model.torchscript"
-if not torchscript_path.exists():
-    print("model.torchscript does not exist, loading default.torchscript")
-    torchscript_path = torchscript_path.with_name("default.torchscript")
 predictor = Predictor(torchscript_path=torchscript_path, transform=transform)
 
 
