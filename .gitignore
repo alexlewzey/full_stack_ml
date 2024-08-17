@@ -9,6 +9,7 @@ tmp/
 *.ckpt
 .aws-sam
 *.torchscript
+artifacts
 
 *.swp
 package-lock.json

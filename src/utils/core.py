@@ -17,3 +17,5 @@ tmp_dir = root_dir / "tmp"
 tmp_dir.mkdir(exist_ok=True)
 data_dir = tmp_dir / "data"
 data_dir.mkdir(exist_ok=True)
+artifacts_dir = root_dir / "artifacts"
+artifacts_dir.mkdir(exist_ok=True)

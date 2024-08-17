@@ -30,13 +30,7 @@ app.mount("/static", StaticFiles(directory=dir_api / "static"), name="static")
 templates = Jinja2Templates(directory=dir_api / "templates")
 
 
-def get_predictor():
-    if not hasattr(get_predictor, "instance"):
-        logger.info("get_predictor.instance does not exist: creating instance")
-        get_predictor.instance = Predictor(  # type: ignore
-            experiment_name=experiment_name, model_name=model_name
-        )
-    return get_predictor.instance  # type: ignore
+predictor = Predictor(experiment_name=experiment_name, model_name=model_name)
 
 
 @app.get("/healthcheck")
@@ -59,7 +53,7 @@ async def index(request: Request):
 async def upload(request: Request, payload: ImageData):  # noqa: B008
     bytes_ = payload.image_data.encode("utf-8")
     img = Image.open(io.BytesIO(base64.b64decode(bytes_))).convert("RGB")
-    label = get_predictor().predict(img)
+    label = predictor.predict(img)
     return templates.TemplateResponse(
         request,
         "upload.html",

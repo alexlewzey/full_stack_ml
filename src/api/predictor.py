@@ -1,6 +1,8 @@
 """Module that contains `Predictor` which loads model artifact and make predicitons."""
 
 
+from pathlib import Path
+
 import dagshub
 import mlflow
 import pandas as pd
@@ -12,6 +14,7 @@ from torchvision import transforms
 
 from src.train.utils.metadata import DECODING
 from src.train.utils.preprocessing import Transforms
+from src.utils.core import artifacts_dir, username
 
 
 class MLFlowExperiment:
@@ -47,11 +50,10 @@ class MLFlowExperiment:
 
 
 class Predictor:
-    def __init__(self, experiment_name: str, model_name: str, device: str = "cpu"):
+    def __init__(self, model_path: str | Path, device: str = "cpu"):
+        model_path = Path(model_path)
         self.device = torch.device(device)
-        self.transform, self.model = load_champion_pipeline(
-            experiment_name=experiment_name, model_name=model_name
-        )
+
         self.model = self.model.to(self.device)
         self.model.eval()
 
@@ -68,11 +70,15 @@ class Predictor:
 def load_champion_pipeline(
     experiment_name: str, model_name: str
 ) -> tuple[transforms.Compose, nn.Module]:
-    dagshub.init(repo_owner="alexlewzey", repo_name="full_stack_ml", mlflow=True)
+    dagshub.init(repo_owner=username, repo_name="full_stack_ml", mlflow=True)
     client = mlflow.MlflowClient()
     experiment = MLFlowExperiment(experiment_name=experiment_name)
-    model = mlflow.pytorch.load_model(model_uri=f"models:/{model_name}@champion")
     run_id = client.get_model_version_by_alias(model_name, "champion").run_id
+    file: str = "model.torchscript"
+    mlflow.artifacts.download_artifacts(
+        run_id=run_id, artifact_path=file, dst_path=artifacts_dir
+    )
+    model = torch.jit.load(artifacts_dir / file)
     transforms_config_str = experiment.df.set_index("run_id").loc[run_id][
         "transforms_config"
     ]

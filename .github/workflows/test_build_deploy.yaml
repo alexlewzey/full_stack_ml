@@ -7,6 +7,17 @@ on:
   push:
     branches:
     - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Which environment to deploy to:'
+        required: true
+        type: choice
+        options:
+        - staging
+        - prod
+        default: staging
+
 
 
 env:
