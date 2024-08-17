@@ -9,7 +9,7 @@ from mlflow.store.artifact.runs_artifact_repo import RunsArtifactRepository
 from PIL import Image
 
 from src.api.predictor import MLFlowExperiment, Predictor
-from src.utils.core import image_dir, model_name
+from src.utils.core import experiment_name, image_dir, model_name, username
 
 
 @dataclass
@@ -17,15 +17,12 @@ class Config:
     run_id: str | None = None
     column: str = "valid_loss"
     ascending: bool = True
-    experiment_name: str = "cats_vs_dogs"
-    environment: str = "prod"
 
 
 def stage_model(config: Config) -> None:
-    dagshub.init(repo_owner="alexlewzey", repo_name="full_stack_ml", mlflow=True)
+    dagshub.init(repo_owner=username, repo_name="full_stack_ml", mlflow=True)
     client = MlflowClient()
-    experiment = MLFlowExperiment(experiment_name=config.experiment_name)
-    model_name: str = f"{config.environment}.cats_vs_dogs"
+    experiment = MLFlowExperiment(experiment_name=experiment_name)
     run_id = (
         config.run_id
         if config.run_id
@@ -43,8 +40,8 @@ def stage_model(config: Config) -> None:
     client.set_registered_model_alias(model_name, "champion", version.version)
 
 
-def test_staged_model(config: Config) -> None:
-    predictor = Predictor(experiment_name=config.experiment_name, model_name=model_name)
+def test_staged_model() -> None:
+    predictor = Predictor(experiment_name=experiment_name, model_name=model_name)
     img_dog = Image.open(image_dir / "dog_0.png")
     assert predictor.predict(img_dog) == "dog"
 
@@ -72,14 +69,12 @@ def main() -> None:
         default=Config.ascending,
         help="Whether to grab the max or min row corresponding to the `column`",
     )
-    parser.add_argument("--experiment_name", type=str, default=Config.experiment_name)
-    parser.add_argument("--environment", type=str, default=Config.environment)
     args = vars(parser.parse_args())
     if args["run_id"]:
         print("run_id argument detected, column and ascending will be ignored.")
     config = Config(**args)
     stage_model(config)
-    test_staged_model(config)
+    test_staged_model()
     print("model successfully staged!")
 
 

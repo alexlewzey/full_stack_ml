@@ -12,7 +12,7 @@ import torch
 import torch.nn as nn
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
 
-from src.utils.core import data_dir, tmp_dir, username
+from src.utils.core import data_dir, experiment_name, tmp_dir, username
 
 from .utils.loaders import CatVsDogsDataModule
 from .utils.models import get_model
@@ -33,7 +33,6 @@ default_transforms_config: TransformsConfig = {
 @dataclass
 class Config:
     model: str = "pretrained_res_net"
-    experiment_name: str = "cats_vs_dogs"
     batch_size: int = 32
     pct_train: float = 0.8
     lr: float = 1e-4
@@ -47,7 +46,6 @@ def cli() -> Config:
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", type=str, default=None)
     parser.add_argument("--model", type=str, default=Config.model)
-    parser.add_argument("--experiment_name", type=str, default=Config.experiment_name)
     parser.add_argument("--batch_size", type=int, default=Config.batch_size)
     parser.add_argument("--pct_train", type=float, default=Config.pct_train)
     parser.add_argument("--lr", type=float, default=Config.lr)
@@ -85,12 +83,12 @@ def train_and_save_model(config: Config) -> None:
     torchscript_path: Path = tmp_dir / "model.torchscript"
     dagshub.init(repo_owner=username, repo_name="full_stack_ml", mlflow=True)
 
-    mlflow.set_experiment(experiment_name=config.experiment_name)
+    mlflow.set_experiment(experiment_name=experiment_name)
     mlflow.pytorch.autolog()
 
     early_stopping = EarlyStopping("valid_loss")
     model_checkpoint = ModelCheckpoint(
-        monitor="valid_loss", filename="cats-vs-dogs-{epoch:03d}-{valid_loss:.3f}"
+        monitor="valid_loss", filename=experiment_name + "-{epoch:03d}-{valid_loss:.3f}"
     )
     callbacks = [
         early_stopping,

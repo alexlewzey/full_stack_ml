@@ -1,11 +1,14 @@
 """Module containing general varibles such as project paths."""
+import logging
+import os
 from pathlib import Path
 
 experiment_name: str = "cats_vs_dogs"
 repo_name: str = "full_stack_ml"
 username: str = "alexlewzey"
-environment: str = "prod"
-model_name: str = f"{environment}.cats_vs_dogs"
+environment: str = os.environ.get("ENVIRONMENT", "prod")
+model_name: str = f"{environment}.{experiment_name}"
+logging_level = logging.INFO
 
 root_dir = Path(__file__).parent.parent.parent
 image_dir = root_dir / "images"

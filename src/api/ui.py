@@ -2,6 +2,7 @@
 the http request into lambda proxy."""
 import base64
 import io
+import logging
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -12,7 +13,10 @@ from PIL import Image
 from pydantic import BaseModel
 
 from src.api.predictor import Predictor
-from src.utils.core import experiment_name, model_name
+from src.utils.core import experiment_name, logging_level, model_name
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging_level)
 
 
 class ImageData(BaseModel):
@@ -28,6 +32,7 @@ templates = Jinja2Templates(directory=dir_api / "templates")
 
 def get_predictor():
     if not hasattr(get_predictor, "instance"):
+        logger.info("get_predictor.instance does not exist: creating instance")
         get_predictor.instance = Predictor(  # type: ignore
             experiment_name=experiment_name, model_name=model_name
         )
@@ -36,12 +41,18 @@ def get_predictor():
 
 @app.get("/healthcheck")
 async def healthcheck():
-    return {"hello": "world"}
+    try:
+        return {"hello": "world"}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.get("/")
 async def index(request: Request):
-    return templates.TemplateResponse(request, "index.html")
+    try:
+        return templates.TemplateResponse(request, "index.html")
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.post("/upload")
