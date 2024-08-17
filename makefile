@@ -18,7 +18,7 @@ deploy:
 	cdk deploy --require-approval never
 
 test-deployment:
-	python -m tests.api.validate_deployment https://gsabcwuslg.execute-api.eu-west-2.amazonaws.com/prod
+	python -m tests.api.validate_deployment
 
 train:
 	PYTHONWARNINGS="ignore" python -m src.train.train --file configs/default_config.json
@@ -28,3 +28,6 @@ stage:
 
 mlflow:
 	mlflow ui --host 0.0.0.0 --port 8080
+
+get-url:
+	aws cloudformation describe-stacks --stack-name CatVsDogStack --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayUrl'].OutputValue" --output text

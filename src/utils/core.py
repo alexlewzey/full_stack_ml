@@ -19,3 +19,7 @@ data_dir = tmp_dir / "data"
 data_dir.mkdir(exist_ok=True)
 artifacts_dir = root_dir / "artifacts"
 artifacts_dir.mkdir(exist_ok=True)
+
+logging.basicConfig(
+    level=logging_level, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)

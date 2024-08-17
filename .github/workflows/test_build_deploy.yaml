@@ -117,3 +117,6 @@ jobs:
 
     - name: CDK Deploy
       run: cdk deploy --all --require-approval never
+
+    - name: Validate deployment
+      run: python -m tests.api.validate_deployment
