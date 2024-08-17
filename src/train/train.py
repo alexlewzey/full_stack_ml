@@ -5,17 +5,18 @@ import logging
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
+import dagshub
 import lightning as L  # noqa: N812
 import mlflow
 import torch
 import torch.nn as nn
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
 
-from src.utils.core import data_dir, root_dir, tmp_dir
+from src.utils.core import data_dir, tmp_dir, username
 
 from .utils.loaders import CatVsDogsDataModule
 from .utils.models import get_model
-from .utils.preprocessing import TransformsConfig, build_transforms
+from .utils.preprocessing import Transforms, TransformsConfig
 from .utils.training import ImageClassifier
 
 logging.getLogger("mlflow").setLevel(logging.ERROR)
@@ -33,9 +34,9 @@ default_transforms_config: TransformsConfig = {
 class Config:
     model: str = "pretrained_res_net"
     experiment_name: str = "cats_vs_dogs"
-    batch_size: int = 64
+    batch_size: int = 32
     pct_train: float = 0.8
-    lr: float = 1e-5
+    lr: float = 1e-4
     max_epochs: int = 50
     transforms_config: TransformsConfig = field(
         default_factory=lambda: default_transforms_config
@@ -52,7 +53,7 @@ def cli() -> Config:
     parser.add_argument("--lr", type=float, default=Config.lr)
     parser.add_argument("--max_epochs", type=int, default=Config.max_epochs)
     parser.add_argument(
-        "--transforms_config", type=int, default=Config.transforms_config
+        "--transforms_config", type=str, default=Config().transforms_config
     )
     args = vars(parser.parse_args())
 
@@ -82,8 +83,8 @@ def create_and_train_model(
 
 def train_and_save_model(config: Config) -> None:
     torchscript_path: Path = tmp_dir / "model.torchscript"
-    mlflow_dir = (root_dir / "mlruns").as_posix()
-    mlflow.set_tracking_uri(f"file:{mlflow_dir}")
+    dagshub.init(repo_owner=username, repo_name="full_stack_ml", mlflow=True)
+
     mlflow.set_experiment(experiment_name=config.experiment_name)
     mlflow.pytorch.autolog()
 
@@ -96,13 +97,13 @@ def train_and_save_model(config: Config) -> None:
         model_checkpoint,
     ]
     with mlflow.start_run():
-        transform = build_transforms(config.transforms_config)
+        transform = Transforms(config.transforms_config)
         model = get_model(config.model)
         data_module = CatVsDogsDataModule(
             data_dir=data_dir,
             batch_size=config.batch_size,
             pct_train=config.pct_train,
-            transform=transform,
+            transform=transform.transforms,
         )
         create_and_train_model(
             model=model,
@@ -116,7 +117,7 @@ def train_and_save_model(config: Config) -> None:
         best_model = ImageClassifier.load_from_checkpoint(
             checkpoint_path=model_checkpoint.best_model_path, model=model
         )
-        mlflow.pytorch.log_model(best_model, "model")
+        mlflow.pytorch.log_model(best_model.model, "model")
         mlflow.log_params(data_module.hparams)
         mlflow.log_params(best_model.hparams)
         mlflow.log_params(asdict(config))

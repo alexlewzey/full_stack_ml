@@ -2,7 +2,6 @@
 the http request into lambda proxy."""
 import base64
 import io
-import json
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -13,8 +12,7 @@ from PIL import Image
 from pydantic import BaseModel
 
 from src.api.predictor import Predictor
-from src.train.utils.preprocessing import build_transforms
-from src.utils.core import root_dir
+from src.utils.core import experiment_name, model_name
 
 
 class ImageData(BaseModel):
@@ -27,13 +25,13 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory=dir_api / "static"), name="static")
 templates = Jinja2Templates(directory=dir_api / "templates")
 
-# todo: load transforms and
-with (root_dir / "configs" / "default_config.json").open() as f:
-    config = json.load(f)
-transform = build_transforms(config["transforms_config"])
 
-torchscript_path = dir_api / "staged_model" / "model.torchscript"
-predictor = Predictor(torchscript_path=torchscript_path, transform=transform)
+def get_predictor():
+    if not hasattr(get_predictor, "instance"):
+        get_predictor.instance = Predictor(  # type: ignore
+            experiment_name=experiment_name, model_name=model_name
+        )
+    return get_predictor.instance  # type: ignore
 
 
 @app.get("/healthcheck")
@@ -50,7 +48,7 @@ async def index(request: Request):
 async def upload(request: Request, payload: ImageData):  # noqa: B008
     bytes_ = payload.image_data.encode("utf-8")
     img = Image.open(io.BytesIO(base64.b64decode(bytes_))).convert("RGB")
-    label = predictor.predict(img)
+    label = get_predictor().predict(img)
     return templates.TemplateResponse(
         request,
         "upload.html",

@@ -1,9 +1,9 @@
 {
   "model": "pretrained_res_net",
   "experiment_name": "cats_vs_dogs",
-  "batch_size": 64,
+  "batch_size": 32,
   "pct_train": 0.8,
-  "lr": 1e-05,
+  "lr": 0.0001,
   "max_epochs": 50,
   "transforms_config": {
     "Resize": {

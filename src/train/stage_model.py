@@ -1,23 +1,15 @@
 """CLI script that stages trained model i.e. grabs a model artifact from mlflow adds it
 to the staging directory and tests it can be loaded for predictions."""
 import argparse
-import json
-import shutil
 from dataclasses import dataclass
-from pathlib import Path
 
-import mlflow
-import pandas as pd
+import dagshub
 from mlflow import MlflowClient
+from mlflow.store.artifact.runs_artifact_repo import RunsArtifactRepository
 from PIL import Image
 
-from src.api.predictor import Predictor
-from src.train.utils.preprocessing import build_transforms
-from src.utils.core import image_dir, root_dir
-
-staged_dir = root_dir / "src" / "api" / "staged_model"
-staged_file = staged_dir / "model.torchscript"
-mlflow_dir = root_dir / "mlruns"
+from src.api.predictor import MLFlowExperiment, Predictor
+from src.utils.core import image_dir, model_name
 
 
 @dataclass
@@ -26,46 +18,14 @@ class Config:
     column: str = "valid_loss"
     ascending: bool = True
     experiment_name: str = "cats_vs_dogs"
-
-
-class MLFlowExperiment:
-    def __init__(self, experiment_name: str):
-        self.experiment_name = experiment_name
-        self.client = MlflowClient()
-        self.df = self.get_experiment_df(experiment_name)
-
-    def get_experiment_df(self, experiment_name: str) -> pd.DataFrame:
-        experiments = pd.DataFrame(
-            map(dict, self.client.search_experiments())
-        ).set_index("name")
-        self.experiment_id = experiments.loc[experiment_name, "experiment_id"]
-        runs = self.client.search_runs(experiment_ids=self.experiment_id)
-        data = []
-        for run in runs:
-            run_data = {
-                "run_id": run.info.run_id,
-                "start_time": run.info.start_time,
-                "status": run.info.status,
-            }
-            run_data.update(run.data.metrics)
-            run_data.update(run.data.params)
-            data.append(run_data)
-        return pd.DataFrame(data)
-
-    def get_artifact_path(self, run_id: str, path: str) -> Path:
-        return mlflow_dir / f"{self.experiment_id}/{run_id}/{path}"
-
-    def get_best_run_id(self, column: str, ascending: bool):
-        return (
-            self.df[self.df.status == "FINISHED"]
-            .sort_values(column, ascending=ascending)
-            .iloc[0, 0]
-        )
+    environment: str = "prod"
 
 
 def stage_model(config: Config) -> None:
-    mlflow.set_tracking_uri(f"file:{mlflow_dir.as_posix()}")
+    dagshub.init(repo_owner="alexlewzey", repo_name="full_stack_ml", mlflow=True)
+    client = MlflowClient()
     experiment = MLFlowExperiment(experiment_name=config.experiment_name)
+    model_name: str = f"{config.environment}.cats_vs_dogs"
     run_id = (
         config.run_id
         if config.run_id
@@ -73,20 +33,18 @@ def stage_model(config: Config) -> None:
             column=config.column, ascending=config.ascending
         )
     )
-    torchscript_path = experiment.get_artifact_path(
-        run_id, f"artifacts/{staged_file.name}"
-    )
-    assert torchscript_path.exists()
-    staged_dir.mkdir(exist_ok=True, parents=True)
-    shutil.copy2(torchscript_path, staged_file)
+    try:
+        client.create_registered_model(model_name)
+    except Exception as e:
+        if "RESOURCE_ALREADY_EXISTS" not in str(e):
+            raise e
+    model_uri = RunsArtifactRepository.get_underlying_uri(f"runs:/{run_id}/model")
+    version = client.create_model_version(model_name, model_uri, run_id)
+    client.set_registered_model_alias(model_name, "champion", version.version)
 
 
-def test_staged_model() -> None:
-    # todo
-    with (root_dir / "configs" / "default_config.json").open() as f:
-        config = json.load(f)
-    transform = build_transforms(config["transforms_config"])
-    predictor = Predictor(staged_file.as_posix(), transform)
+def test_staged_model(config: Config) -> None:
+    predictor = Predictor(experiment_name=config.experiment_name, model_name=model_name)
     img_dog = Image.open(image_dir / "dog_0.png")
     assert predictor.predict(img_dog) == "dog"
 
@@ -115,12 +73,13 @@ def main() -> None:
         help="Whether to grab the max or min row corresponding to the `column`",
     )
     parser.add_argument("--experiment_name", type=str, default=Config.experiment_name)
+    parser.add_argument("--environment", type=str, default=Config.environment)
     args = vars(parser.parse_args())
     if args["run_id"]:
         print("run_id argument detected, column and ascending will be ignored.")
     config = Config(**args)
     stage_model(config)
-    test_staged_model()
+    test_staged_model(config)
     print("model successfully staged!")
 
 

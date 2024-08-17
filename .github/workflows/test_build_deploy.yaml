@@ -9,6 +9,9 @@ on:
     - main
 
 
+env:
+  DAGSHUB_USER_TOKEN: ${{ secrets.DAGSHUB_USER_TOKEN }}
+
 jobs:
   test-and-build:
     runs-on: ubuntu-latest

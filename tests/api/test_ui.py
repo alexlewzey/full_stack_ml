@@ -36,12 +36,15 @@ def post_image_to_upload(path_img: Path):
 
 
 class MockPredictor:
+    def __init__(self, experiment_name: str, model_name: str):
+        pass
+
     def predict(self, img):
         return "dog"
 
 
 def test_upload():
-    with patch("src.api.predictor.Predictor", MockPredictor):
+    with patch("src.api.ui.Predictor", MockPredictor):
         response = post_image_to_upload(path_dog_0)
         assert response.status_code == 200
         assert "It's a <b>dog</b>!" in response.text

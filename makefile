@@ -18,7 +18,7 @@ deploy:
 	cdk deploy --require-approval never
 
 train:
-	PYTHONWARNINGS="ignore" python -m src.train.train --model pretrained_res_net --lr 1e-4
+	PYTHONWARNINGS="ignore" python -m src.train.train --file configs/default_config.json
 
 stage:
 	python -m src.train.stage_model

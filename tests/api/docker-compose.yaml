@@ -8,6 +8,8 @@ services:
       dockerfile: src/api/Dockerfile
     image: api
     platform: linux/arm64
+    environment:
+    - DAGSHUB_USER_TOKEN=${DAGSHUB_USER_TOKEN}
     ports:
     - 8080:8080
 
