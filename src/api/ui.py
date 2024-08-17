@@ -13,7 +13,7 @@ from PIL import Image
 from pydantic import BaseModel
 
 from src.api.predictor import Predictor
-from src.utils.core import experiment_name, logging_level, model_name
+from src.utils.core import artifacts_dir, logging_level
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging_level)
@@ -30,7 +30,9 @@ app.mount("/static", StaticFiles(directory=dir_api / "static"), name="static")
 templates = Jinja2Templates(directory=dir_api / "templates")
 
 
-predictor = Predictor(experiment_name=experiment_name, model_name=model_name)
+model_path = artifacts_dir / "model.torchscript"
+transforms_path = artifacts_dir / "transforms_config.txt"
+predictor = Predictor(model_path=model_path, transforms_path=transforms_path)
 
 
 @app.get("/healthcheck")

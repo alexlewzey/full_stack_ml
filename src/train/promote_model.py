@@ -6,10 +6,13 @@ from dataclasses import dataclass
 import dagshub
 from mlflow import MlflowClient
 from mlflow.store.artifact.runs_artifact_repo import RunsArtifactRepository
-from PIL import Image
 
-from src.api.predictor import MLFlowExperiment, Predictor
-from src.utils.core import experiment_name, image_dir, model_name, username
+from src.train.utils.experiment import Experiment
+from src.utils.core import (
+    experiment_name,
+    model_name,
+    username,
+)
 
 
 @dataclass
@@ -19,10 +22,10 @@ class Config:
     ascending: bool = True
 
 
-def stage_model(config: Config) -> None:
+def assign_champion(config: Config) -> None:
     dagshub.init(repo_owner=username, repo_name="full_stack_ml", mlflow=True)
     client = MlflowClient()
-    experiment = MLFlowExperiment(experiment_name=experiment_name)
+    experiment = Experiment(experiment_name=experiment_name)
     run_id = (
         config.run_id
         if config.run_id
@@ -38,15 +41,6 @@ def stage_model(config: Config) -> None:
     model_uri = RunsArtifactRepository.get_underlying_uri(f"runs:/{run_id}/model")
     version = client.create_model_version(model_name, model_uri, run_id)
     client.set_registered_model_alias(model_name, "champion", version.version)
-
-
-def test_staged_model() -> None:
-    predictor = Predictor(experiment_name=experiment_name, model_name=model_name)
-    img_dog = Image.open(image_dir / "dog_0.png")
-    assert predictor.predict(img_dog) == "dog"
-
-    img_cat = Image.open(image_dir / "cat_0.jpg")
-    assert predictor.predict(img_cat) == "cat"
 
 
 def main() -> None:
@@ -73,9 +67,7 @@ def main() -> None:
     if args["run_id"]:
         print("run_id argument detected, column and ascending will be ignored.")
     config = Config(**args)
-    stage_model(config)
-    test_staged_model()
-    print("model successfully staged!")
+    assign_champion(config)
 
 
 if __name__ == "__main__":

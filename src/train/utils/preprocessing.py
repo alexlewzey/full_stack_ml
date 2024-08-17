@@ -3,6 +3,8 @@
 import ast
 import json
 
+from PIL import Image
+from torch import Tensor
 from torchvision import transforms
 
 TransformsConfig = dict[str, dict]
@@ -28,3 +30,6 @@ class Transforms:
     def from_json(cls, config_str: str) -> transforms.Compose:
         config = json.loads(config_str)
         return cls(config)
+
+    def __call__(self, img: Image) -> Tensor:
+        return self.transforms(img)
