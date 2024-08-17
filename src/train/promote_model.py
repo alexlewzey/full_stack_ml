@@ -1,5 +1,5 @@
-"""CLI script that stages trained model i.e. grabs a model artifact from mlflow adds it
-to the staging directory and tests it can be loaded for predictions."""
+"""CLI script that selects a mlflow run_id based of some metric (e.g. best valid_loss)
+and promotes it to champion alias in the model registery."""
 import argparse
 from dataclasses import dataclass
 
@@ -22,7 +22,7 @@ class Config:
     ascending: bool = True
 
 
-def assign_champion(config: Config) -> None:
+def promote_model_to_champion(config: Config) -> None:
     dagshub.init(repo_owner=username, repo_name="full_stack_ml", mlflow=True)
     client = MlflowClient()
     experiment = Experiment(experiment_name=experiment_name)
@@ -67,7 +67,7 @@ def main() -> None:
     if args["run_id"]:
         print("run_id argument detected, column and ascending will be ignored.")
     config = Config(**args)
-    assign_champion(config)
+    promote_model_to_champion(config)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+"""Download model and transforms artifacts for the current champion alias model."""
 import dagshub
 import mlflow
 from PIL import Image

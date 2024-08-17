@@ -2,7 +2,7 @@
 S3."""
 import os
 
-from aws_cdk import Duration, Stack
+from aws_cdk import CfnOutput, Duration, Stack
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_ecr_assets as ecr_assets
 from aws_cdk import aws_lambda as lambda_
@@ -60,3 +60,5 @@ class CatVsDogStack(Stack):
                 "allow_origins": apigateway.Cors.ALL_ORIGINS,
             },
         )
+
+        CfnOutput(self, "ApiGatewayUrl", value=api.url)

@@ -17,6 +17,9 @@ deploy:
 	cdk bootstrap
 	cdk deploy --require-approval never
 
+test-deployment:
+	python -m tests.api.validate_deployment https://gsabcwuslg.execute-api.eu-west-2.amazonaws.com/prod
+
 train:
 	PYTHONWARNINGS="ignore" python -m src.train.train --file configs/default_config.json
 
