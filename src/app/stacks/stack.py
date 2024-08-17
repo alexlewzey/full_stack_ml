@@ -11,8 +11,11 @@ from src.utils.core import root_dir
 
 
 class CatVsDogStack(Stack):
-    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+    def __init__(
+        self, scope: Construct, construct_id: str, envs: dict | None = None, **kwargs
+    ) -> None:
         super().__init__(scope, construct_id, **kwargs)
+        envs = {} if envs is None else envs
 
         docker_image = ecr_assets.DockerImageAsset(
             self,
@@ -38,6 +41,7 @@ class CatVsDogStack(Stack):
             architecture=lambda_.Architecture.ARM_64,
             memory_size=512,
             timeout=Duration.seconds(900),
+            environment=envs,
         )
 
         api = apigateway.LambdaRestApi(  # noqa: F841
