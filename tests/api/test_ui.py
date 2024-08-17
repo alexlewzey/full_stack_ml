@@ -2,6 +2,7 @@ import base64
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
 from fastapi.testclient import TestClient
 
 from src.api.ui import app
@@ -12,6 +13,12 @@ client = TestClient(app)
 
 path_dog_0 = image_dir / "dog_0.png"
 path_cat_0 = image_dir / "cat_0.jpg"
+
+
+@pytest.fixture(autouse=True)
+def mock_pipeline():
+    with patch("src.api.ui.Pipeline", MockPipeline) as mock_pipeline:
+        yield mock_pipeline
 
 
 def test_healthcheck():
@@ -35,8 +42,8 @@ def post_image_to_upload(path_img: Path):
     return client.post("/upload", json=payload)
 
 
-class MockPredictor:
-    def __init__(self, experiment_name: str, model_name: str):
+class MockPipeline:
+    def __init__(self, model_path: str, transforms_path: str):
         pass
 
     def predict(self, img):
@@ -44,10 +51,9 @@ class MockPredictor:
 
 
 def test_upload():
-    with patch("src.api.ui.Predictor", MockPredictor):
-        response = post_image_to_upload(path_dog_0)
-        assert response.status_code == 200
-        assert "It's a <b>dog</b>!" in response.text
+    response = post_image_to_upload(path_dog_0)
+    assert response.status_code == 200
+    assert "It's a <b>dog</b>!" in response.text
 
 
 if __name__ == "__main__":

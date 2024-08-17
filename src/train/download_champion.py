@@ -2,7 +2,7 @@ import dagshub
 import mlflow
 from PIL import Image
 
-from src.api.predictor import Predictor
+from src.api.pipeline import Pipeline
 from src.train.utils.experiment import Experiment
 from src.utils.core import (
     artifacts_dir,
@@ -31,7 +31,7 @@ def download_champion_pipeline(experiment_name: str, model_name: str) -> None:
 
 
 def validate_download() -> None:
-    predictor = Predictor(model_path=model_path, transforms_path=transforms_path)
+    predictor = Pipeline(model_path=model_path, transforms_path=transforms_path)
     color = (255, 0, 0)
     img = Image.new("RGB", (300, 300), color)
     assert predictor.predict(img) in ("dog", "cat")

@@ -10,7 +10,7 @@ from src.train.utils.metadata import DECODING
 from src.train.utils.preprocessing import Transforms
 
 
-class Predictor:
+class Pipeline:
     def __init__(
         self, model_path: str | Path, transforms_path: str | Path, device: str = "cpu"
     ):

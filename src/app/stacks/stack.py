@@ -1,5 +1,7 @@
 """Module that contains the CDK stack i.e. declares the infrastructure to be created in
 S3."""
+import os
+
 from aws_cdk import Duration, Stack
 from aws_cdk import aws_apigateway as apigateway
 from aws_cdk import aws_ecr_assets as ecr_assets
@@ -11,11 +13,8 @@ from src.utils.core import root_dir
 
 
 class CatVsDogStack(Stack):
-    def __init__(
-        self, scope: Construct, construct_id: str, envs: dict | None = None, **kwargs
-    ) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        envs = {} if envs is None else envs
 
         docker_image = ecr_assets.DockerImageAsset(
             self,
@@ -23,6 +22,7 @@ class CatVsDogStack(Stack):
             directory=root_dir.as_posix(),
             file="src/api/Dockerfile",
             platform=ecr_assets.Platform.LINUX_ARM64,
+            build_args={"DAGSHUB_USER_TOKEN": os.environ["DAGSHUB_USER_TOKEN"]},
         )
 
         log_group = logs.LogGroup(
@@ -41,7 +41,6 @@ class CatVsDogStack(Stack):
             architecture=lambda_.Architecture.ARM_64,
             memory_size=512,
             timeout=Duration.seconds(900),
-            environment=envs,
         )
 
         api = apigateway.LambdaRestApi(  # noqa: F841

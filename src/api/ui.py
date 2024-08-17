@@ -12,7 +12,7 @@ from mangum import Mangum
 from PIL import Image
 from pydantic import BaseModel
 
-from src.api.predictor import Predictor
+from src.api.pipeline import Pipeline
 from src.utils.core import artifacts_dir, logging_level
 
 logger = logging.getLogger(__name__)
@@ -30,9 +30,13 @@ app.mount("/static", StaticFiles(directory=dir_api / "static"), name="static")
 templates = Jinja2Templates(directory=dir_api / "templates")
 
 
-model_path = artifacts_dir / "model.torchscript"
-transforms_path = artifacts_dir / "transforms_config.txt"
-predictor = Predictor(model_path=model_path, transforms_path=transforms_path)
+def get_pipeline():
+    if not hasattr(get_pipeline, "instance"):
+        model_path = artifacts_dir / "model.torchscript"
+        transforms_path = artifacts_dir / "transforms_config.txt"
+        pipeline = Pipeline(model_path=model_path, transforms_path=transforms_path)
+        get_pipeline.instance = pipeline  # type: ignore
+    return get_pipeline.instance  # type: ignore
 
 
 @app.get("/healthcheck")
@@ -55,7 +59,7 @@ async def index(request: Request):
 async def upload(request: Request, payload: ImageData):  # noqa: B008
     bytes_ = payload.image_data.encode("utf-8")
     img = Image.open(io.BytesIO(base64.b64decode(bytes_))).convert("RGB")
-    label = predictor.predict(img)
+    label = get_pipeline().predict(img)
     return templates.TemplateResponse(
         request,
         "upload.html",
