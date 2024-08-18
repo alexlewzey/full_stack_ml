@@ -67,7 +67,7 @@ class ValidateDeployment:
 if __name__ == "__main__":
     validate_deployment = ValidateDeployment()
     try:
-        requests.get(validate_deployment.url, timeout=60)
+        requests.get(validate_deployment.url, timeout=30)
     except Exception:  # noqa: S110
         pass
     validate_deployment.validate()
