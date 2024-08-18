@@ -7,6 +7,13 @@ on:
   push:
     branches:
     - main
+    paths-ignore:
+    - '**/*.md'
+    - .gitignore
+    - LICENSE
+    - makefile
+    - .prettierrc
+    - .vscode/**
   workflow_dispatch:
     inputs:
       environment:
