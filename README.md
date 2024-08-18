@@ -1,6 +1,6 @@
 # Full Stack ML
 
-A full-stack machine learning (image classification) project that includes the complete ML pipeline from model training to production deployment, along with best practices in software engineering and DevOps.
+A full-stack machine learning (image classification) project that includes the complete ML pipeline from model training to production deployment, along with best practices in software engineering, DevOps and MLOps.
 
 ## UI Example
 
@@ -13,7 +13,7 @@ A full-stack machine learning (image classification) project that includes the c
 ## Features
 
 - CLI scripts to train image classification models (cat or dog)
-- Experiment tracking and model repository
+- Remote experiment tracking and model repository
 - Web UI for users to upload images and view predictions
 - Serverless architecture using AWS Lambda for cost-effective scaling
 - Infrastructure as Code (IaC) with AWS CDK for reproducible deployments
@@ -24,12 +24,12 @@ A full-stack machine learning (image classification) project that includes the c
 
 ## Tech Stack
 
-- **Machine Learning**: PyTorch, PyTorch Lightning, MLflow
+- **Machine Learning**: PyTorch, PyTorch Lightning, MLflow, DagsHub
 - **API/UI**: FastAPI, Mangum
 - **Infrastructure**: AWS (Lambda, ERC, ApiGateway), AWS CDK (Python)
 - **Containerization**: Docker
 - **Testing**: pytest
-- **Code Quality**: ruff, mypy
+- **Code Quality**: ruff, mypy, pre-commit
 - **Dependency Management**: Poetry, devcontainer
 - **CI/CD**: GitHub Actions
 - **Monitoring**: CloudWatch
