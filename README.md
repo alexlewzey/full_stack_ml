@@ -38,13 +38,17 @@ A full-stack machine learning (image classification) project that includes the c
 ## Project Structure
 
 ```plaintext
+├── LICENSE
 ├── README.md
 ├── cdk.json
+├── configs
+│   └── default_config.json
 ├── images
 │   ├── cat_0.jpg
 │   ├── dog_0.png
 │   ├── sample
 │   │   └── data
+│   ├── train_example.gif
 │   └── ui_example.gif
 ├── makefile
 ├── package.json
@@ -54,27 +58,18 @@ A full-stack machine learning (image classification) project that includes the c
 ├── src
 │   ├── api
 │   │   ├── Dockerfile
-│   │   ├── predictor.py
-│   │   ├── staged_model
-│   │   │   └── default.torchscript
+│   │   ├── pipeline.py
 │   │   ├── static
-│   │   │   └── favicon.ico
 │   │   ├── templates
-│   │   │   ├── index.html
-│   │   │   └── upload.html
 │   │   └── ui.py
 │   ├── app
 │   │   ├── app.py
 │   │   └── stacks
-│   │       └── stack.py
 │   ├── train
-│   │   ├── stage_model.py
+│   │   ├── download_champion.py
+│   │   ├── promote_model.py
 │   │   ├── train.py
 │   │   └── utils
-│   │       ├── loaders.py
-│   │       ├── metadata.py
-│   │       ├── models.py
-│   │       └── preprocessing.py
 │   └── utils
 │       └── core.py
 └── tests
@@ -82,11 +77,13 @@ A full-stack machine learning (image classification) project that includes the c
     │   ├── Dockerfile.test
     │   ├── docker-compose.yaml
     │   ├── e2e_ui.py
-    │   └── test_ui.py
+    │   ├── test_ui.py
+    │   └── validate_deployment.py
     ├── app
     │   └── test_stack.py
     └── train
         ├── test_loaders.py
+        ├── test_models.py
         ├── test_preprocessing.py
         └── test_train.py
 ```
