@@ -1,0 +1,81 @@
+[tool.poetry]
+name = "example-cdk"
+version = "0.1.0"
+description = ""
+authors = ["Alexander Lewzey <a.lewzey@gmail.com>"]
+readme = "README.md"
+package-mode = false
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.ui.dependencies]
+requests = "^2.32.3"
+fastapi = "^0.111.0"
+mangum = "^0.17.0"
+torchvision = "^0.19.0"
+torch = "^2.4.0"
+dagshub = "^0.3.34"
+mlflow = "^2.15.1"
+setuptools = "^72.2.0"
+
+[tool.poetry.group.app.dependencies]
+aws-cdk-lib = "^2.147.0"
+constructs = "^10.3.0"
+
+[tool.poetry.group.test.dependencies]
+pre-commit = "^3.7.1"
+pytest = "^8.2.2"
+requests = "^2.32.3"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
+pathspec = "^0.12.1"
+kaggle = "^1.6.17"
+nbconvert = "^7.16.4"
+ruff = "^0.5.7"
+
+
+[tool.poetry.group.train.dependencies]
+torch = "^2.4.0"
+torchvision = "^0.19.0"
+lightning = "^2.3.3"
+mlflow = "^2.15.0"
+
+
+[tool.poetry.group.validate-deployment.dependencies]
+requests = "^2.32.3"
+boto3 = "^1.35.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.mypy]
+ignore_missing_imports = true
+check_untyped_defs = true
+
+
+[tool.ruff]
+select = [
+    "A", # Pyflakes: general checks
+    "B", # pycodestyle: pycodestyle checks
+    "C", # mccabe: complexity checks
+    # "D",  # pydocstyle: docstring style checks
+    "E",  # pycodestyle: pycodestyle errors
+    "F",  # pyflakes: unused imports, variables, etc.
+    "I",  # isort: import sorting
+    "N",  # pep8-naming: naming conventions
+    "S",  # bandit: security checks
+    "W",  # pycodestyle: pycodestyle warnings
+    "UP", # pyupgrade: upgrade python version syntax
+]
+
+ignore = [
+    "S101", # Ignore use of assert detected
+    "S108", # ignore use of tmp
+    "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+]
+fix = true

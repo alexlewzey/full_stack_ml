@@ -1,0 +1,25 @@
+# script that runs end-to-end tests by running the lambda container locally and make requests to it from another container
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: src/api/Dockerfile
+      args:
+      - DAGSHUB_USER_TOKEN=${DAGSHUB_USER_TOKEN}
+    image: api
+    platform: linux/arm64
+    ports:
+    - 8080:8080
+
+
+  api-tests:
+    build:
+      context: ../..
+      dockerfile: tests/api/Dockerfile.test
+    image: test-api
+    platform: linux/arm64
+    command: dockerize -wait tcp://api:8080 -timeout 10s bash -c "python -m pytest -v tests/api/e2e_ui.py"
+    depends_on:
+    - api

@@ -1,0 +1,52 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+	"name": "Python 3",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"build": {"dockerfile": "Dockerfile", "context": ".."},
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python", // Python
+				"charliermarsh.ruff", // Ruff
+				"ms-toolsai.jupyter", // Jupyter
+				"ms-azuretools.vscode-docker", // Docker
+				"tamasfe.even-better-toml", // Even Better TOML
+				"ms-vscode.makefile-tools", // Makefile Tools
+				"redhat.vscode-yaml", // YAML
+				"github.vscode-github-actions", // Github Actions
+				"oderwat.indent-rainbow", // indent-rainbow
+				"vscode-icons-team.vscode-icons" // vscode-icons
+			],
+			"settings": {
+				"editor.rulers": [88, 120],
+				"python.defaultInterpreterPath": "${localWorkspaceFolder}/.venv/bin/python",
+				"python.terminal.activateEnvInCurrentTerminal": true,
+				"python.pythonPath": "${localWorkspaceFolder}/.venv/bin/python"
+			}
+		}
+	},
+
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.kaggle/,target=/home/vscode/.kaggle,type=bind"
+	],
+	"remoteEnv": {
+		"AWS_ACCESS_KEY_ID": "${localEnv:AWS_ACCESS_KEY_ID}",
+		"AWS_SECRET_ACCESS_KEY": "${localEnv:AWS_SECRET_ACCESS_KEY}",
+		"AWS_REGION": "${localEnv:AWS_REGION}"
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "onCreateCommand": "poetry install",
+	"postStartCommand": "git config --global --add safe.directory $(pwd) && poetry install && poetry run pre-commit install --install-hooks",
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

@@ -1,0 +1,14 @@
+# hadolint global ignore=DL3045
+# container that acts as client in the end-to-ends tests
+FROM python:3.12-bullseye
+
+COPY . .
+
+RUN pip install poetry==1.8.3 --no-cache-dir && \
+    poetry config virtualenvs.create false && \
+    poetry install --only main,test --no-interaction --no-ansi --no-root
+
+# Install dockerize
+RUN curl -LO https://github.com/jwilder/dockerize/releases/download/v0.7.0/dockerize-linux-amd64-v0.7.0.tar.gz && \
+    tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v0.7.0.tar.gz && \
+    chmod +x /usr/local/bin/dockerize
