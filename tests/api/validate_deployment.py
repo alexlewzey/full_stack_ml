@@ -38,7 +38,7 @@ class ValidateDeployment:
         response = requests.get(f"{self.url}/", timeout=self.timeout)
         assert response.status_code == 200
         assert "Cat vs Dog Image Classifier" in response.text
-        assert "PyTorch + Lightning + MLflow + FastAPI + HTMX" in response.text
+        assert "PyTorch + Lightning + MLflow + FastAPI" in response.text
         assert "Full Stack Machine Learning Project" in response.text
 
     def post_image_to_upload(self, path_img: Path):

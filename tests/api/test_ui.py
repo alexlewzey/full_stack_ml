@@ -39,7 +39,7 @@ def test_index():
     response = client.get("/")
     assert response.status_code == 200
     assert "Cat vs Dog Image Classifier" in response.text
-    assert "PyTorch + Lightning + MLflow + FastAPI + HTMX" in response.text
+    assert "PyTorch + Lightning + MLflow + FastAPI" in response.text
     assert "Full Stack Machine Learning Project" in response.text
 
 

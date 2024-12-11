@@ -2,6 +2,12 @@
 
 A full-stack machine learning (image classification) project that includes the complete ML pipeline from model training to production deployment, along with best practices in software engineering, DevOps and MLOps.
 
+
+## TODO
+
+- replace poetry with uv
+- add prediction score to UI response
+
 ## UI Example
 
 ![UI Example](images/ui_example.gif)
@@ -108,3 +114,7 @@ The project uses a CI/CD pipeline that automatically:
 
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+
+
