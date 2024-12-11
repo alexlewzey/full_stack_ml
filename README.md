@@ -5,6 +5,7 @@ A full-stack machine learning (image classification) project that includes the c
 
 ## TODO
 
+- remove torchscript files from repo (possibly lfs)
 - add prediction score to UI response
 
 ## UI Example

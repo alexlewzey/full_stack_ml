@@ -1,8 +1,8 @@
 """Module of pytorch/lightning datasets/data modules."""
 import subprocess
 import zipfile
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, Union
 
 import lightning as L  # noqa: N812
 import torch
@@ -13,7 +13,7 @@ from . import metadata
 
 
 class CatsVsDogsDataset(Dataset):
-    def __init__(self, image_dir: Union[Path, str], transform: Callable):
+    def __init__(self, image_dir: Path | str, transform: Callable):
         self.image_dir = Path(image_dir)
         self.transform = transform
         self.paths = list(self.image_dir.iterdir())
