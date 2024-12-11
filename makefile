@@ -1,7 +1,7 @@
 install:
 	rm -rf .venv/
 	uv venv
-	uv sync --all-groups
+	uv sync --all-extras
 
 lint:
 	pre-commit run --all-files

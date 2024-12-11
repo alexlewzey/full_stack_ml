@@ -43,7 +43,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "onCreateCommand": "",
-	"postStartCommand": "git config --global --add safe.directory $(pwd) && uv venv && uv sync --all-groups && uv run pre-commit install --install-hooks",
+	"postStartCommand": "git config --global --add safe.directory $(pwd) && uv venv && uv sync --all-extras && uv run pre-commit install --install-hooks",
 	// Configure tool-specific properties.
 	// "customizations": {},
 

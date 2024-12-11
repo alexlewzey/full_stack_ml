@@ -6,7 +6,7 @@ COPY . .
 
 RUN pip install uv --no-cache-dir && \
     uv venv && \
-    uv sync --group test
+    uv sync --extra test
 
 # Install dockerize
 RUN curl -LO https://github.com/jwilder/dockerize/releases/download/v0.7.0/dockerize-linux-amd64-v0.7.0.tar.gz && \

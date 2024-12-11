@@ -30,7 +30,7 @@ jobs:
       run: |
         pip install uv --no-cache-dir
         uv venv
-        uv sync --group validate-deployment
+        uv sync --extra validate-deployment
 
 
     - name: Configure AWS credentials for staging

@@ -8,12 +8,11 @@ ENV DAGSHUB_USER_TOKEN=$DAGSHUB_USER_TOKEN
 WORKDIR "${LAMBDA_TASK_ROOT}"
 COPY pyproject.toml uv.lock ./
 RUN pip install uv --no-cache-dir && \
-    uv venv && \
-    uv sync --group ui
+    uv pip install -r pyproject.toml --system --all-extras
 
 
 COPY src "${LAMBDA_TASK_ROOT}/src"
 COPY configs "${LAMBDA_TASK_ROOT}/configs"
-RUN uv run python -m src.train.download_champion
+RUN python -m src.train.download_champion
 
 CMD [ "src.api.ui.handler" ]
