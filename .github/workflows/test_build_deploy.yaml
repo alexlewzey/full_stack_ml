@@ -44,9 +44,9 @@ jobs:
 
     - name: Install python dependencies
       run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry config virtualenvs.create false
-        poetry install --no-interaction --no-ansi --no-root
+        pip install uv --no-cache-dir
+        uv venv
+        uv sync --all-groups
 
     - name: Install shell dependencies
       run: |
@@ -57,11 +57,11 @@ jobs:
 
     - name: Run static tests
       run: |
-        poetry run pre-commit run --all-files
+        uv run pre-commit run --all-files
 
     - name: Run unit tests
       run: |
-        python -m pytest tests/ -v
+        uv run python -m pytest tests/ -v
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -94,9 +94,10 @@ jobs:
 
     - name: Install python dependencies
       run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry config virtualenvs.create false
-        poetry install --no-interaction --no-ansi --no-root --only main,app,validate-deployment
+        pip install uv --no-cache-dir
+        uv venv
+        uv sync --group validate-deployment --group app
+
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -126,4 +127,4 @@ jobs:
       run: cdk deploy --all --require-approval never
 
     - name: Validate deployment
-      run: python -m tests.api.validate_deployment
+      run: uv run python -m tests.api.validate_deployment

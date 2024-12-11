@@ -26,9 +26,9 @@ jobs:
 
     - name: Install python dependencies
       run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry config virtualenvs.create false
-        poetry install --no-interaction --no-ansi --no-root --only main,app
+        pip install uv
+        uv venv
+        uv sync --group app
 
     - name: Set up Node.js
       uses: actions/setup-node@v3

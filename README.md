@@ -5,7 +5,6 @@ A full-stack machine learning (image classification) project that includes the c
 
 ## TODO
 
-- replace poetry with uv
 - add prediction score to UI response
 
 ## UI Example
@@ -36,7 +35,7 @@ A full-stack machine learning (image classification) project that includes the c
 - **Containerization**: Docker
 - **Testing**: pytest
 - **Code Quality**: ruff, mypy, pre-commit
-- **Dependency Management**: Poetry, devcontainer
+- **Dependency Management**: uv, devcontainer
 - **CI/CD**: GitHub Actions
 - **Monitoring**: CloudWatch
 
@@ -58,8 +57,7 @@ A full-stack machine learning (image classification) project that includes the c
 │   └── ui_example.gif
 ├── makefile
 ├── package.json
-├── poetry.lock
-├── poetry.toml
+├── uv.lock
 ├── pyproject.toml
 ├── src
 │   ├── api
@@ -114,7 +112,3 @@ The project uses a CI/CD pipeline that automatically:
 
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
-
-

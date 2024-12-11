@@ -28,9 +28,10 @@ jobs:
 
     - name: Install python dependencies
       run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry config virtualenvs.create false
-        poetry install --no-interaction --no-ansi --no-root --only validate-deployment
+        pip install uv --no-cache-dir
+        uv venv
+        uv sync --group validate-deployment
+
 
     - name: Configure AWS credentials for staging
       if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging'
@@ -49,4 +50,4 @@ jobs:
         aws-region: eu-west-2
 
     - name: Validate deployment
-      run: python -m tests.api.validate_deployment
+      run: uv run python -m tests.api.validate_deployment

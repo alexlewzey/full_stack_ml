@@ -27,11 +27,11 @@ repos:
     args:
     - --autofix
 # python
-- repo: https://github.com/PyCQA/docformatter
-  rev: v1.7.5
-  hooks:
-  - id: docformatter
-    args: [--recursive, --in-place, --wrap-summaries, '88', --wrap-descriptions, '88']
+# - repo: https://github.com/PyCQA/docformatter
+#   rev: v1.7.5
+#   hooks:
+#   - id: docformatter
+#     args: [--recursive, --in-place, --wrap-summaries, '88', --wrap-descriptions, '88']
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.1.9
   hooks:

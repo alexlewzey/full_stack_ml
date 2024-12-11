@@ -1,6 +1,7 @@
 install:
 	rm -rf .venv/
-	poetry install
+	uv venv
+	uv sync --all-groups
 
 lint:
 	pre-commit run --all-files

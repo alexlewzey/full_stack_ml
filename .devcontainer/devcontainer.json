@@ -42,8 +42,8 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "onCreateCommand": "poetry install",
-	"postStartCommand": "git config --global --add safe.directory $(pwd) && poetry install && poetry run pre-commit install --install-hooks",
+	// "onCreateCommand": "",
+	"postStartCommand": "git config --global --add safe.directory $(pwd) && uv venv && uv sync --all-groups && uv run pre-commit install --install-hooks",
 	// Configure tool-specific properties.
 	// "customizations": {},
 
