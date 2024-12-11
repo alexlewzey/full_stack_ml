@@ -72,9 +72,7 @@ jobs:
       run: npm install -g aws-cdk
 
     - name: CDK Synth
-      run: |
-        source .venv/bin/activate
-        cdk synth
+      run: uv run cdk synth
 
   deploy:
     needs: test-and-build
@@ -126,7 +124,7 @@ jobs:
         aws-region: eu-west-2
 
     - name: CDK Deploy
-      run: cdk deploy --all --require-approval never
+      run: uv run cdk deploy --all --require-approval never
 
     - name: Validate deployment
       run: uv run python -m tests.api.validate_deployment

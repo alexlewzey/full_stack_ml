@@ -55,4 +55,4 @@ jobs:
         aws-region: eu-west-2
 
     - name: CDK Deploy
-      run: cdk destroy --force
+      run: uv run cdk destroy --force
